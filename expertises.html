@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Nos Expertises - OPEO</title>
+  <link rel="stylesheet" href="styles.css"/>
+  <style>
+    /* ── PAGE HERO BACKGROUND PHOTO ── */
+    section.page-hero {
+      background-image: url('photo-expertise.jpg') !important;
+      background-position: center 25% !important;
+      background-size: cover !important;
+      background-repeat: no-repeat !important;
+    }
+    .hero-exp-overlay {
+      position:absolute; inset:0; z-index:1;
+      background: linear-gradient(
+        to right,
+        rgba(3,38,106,.72) 0%,
+        rgba(3,38,106,.48) 50%,
+        rgba(3,38,106,.32) 100%
+      );
+    }
+    .page-hero .page-hero-grid,
+    .page-hero .page-hero-blob { z-index:2; }
+    .page-hero > .container { padding-top:40px; }
+    .page-hero .container { z-index:3 !important; }
+    .page-hero h1 { font-size:clamp(38px,6vw,72px); color:#fff; margin-bottom:22px; }
+    .page-hero h1 em { font-style:normal; color:var(--orange); }
+    .page-hero p { max-width:52ch; margin-top:20px; }
+    .hero-stats { display:flex; gap:0; margin-top:52px; padding-top:32px; border-top:1px solid rgba(255,255,255,.1); }
+    .hs-item { padding-right:40px; margin-right:40px; border-right:1px solid rgba(255,255,255,.1); }
+    .hs-item:last-child { border-right:none; }
+    .hs-num { font-size:30px; font-weight:900; color:#fff; line-height:1; }
+    .hs-lbl { font-size:10px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:rgba(255,255,255,.3); margin-top:6px; }
+
+    /* ── SPLIT SCREEN ── */
+    .exp-split {
+      display:grid;
+      grid-template-columns:42% 58%;
+      min-height:100vh;
+    }
+
+    /* LEFT STICKY PANEL */
+    .exp-left {
+      position:sticky;
+      top:0;
+      height:100vh;
+      background:var(--navy);
+      overflow:hidden;
+      display:flex;
+      align-items:center;
+    }
+    .exp-left-inner {
+      padding:60px 52px;
+      width:100%;
+      position:relative;
+      z-index:1;
+    }
+    .exp-ghost {
+      position:absolute;
+      right:-20px;
+      bottom:-40px;
+      font-size:260px;
+      font-weight:900;
+      color:#fff;
+      opacity:.04;
+      line-height:1;
+      pointer-events:none;
+      user-select:none;
+      font-family:'Gotham','Helvetica Neue',sans-serif;
+      transition:opacity .4s;
+    }
+    .exp-panel-label {
+      font-size:12px;
+      font-weight:700;
+      letter-spacing:4px;
+      text-transform:uppercase;
+      color:var(--cyan);
+      margin-bottom:22px;
+      transition:opacity .3s, transform .3s;
+    }
+    .exp-panel-title {
+      font-size:clamp(26px,3vw,42px);
+      font-weight:900;
+      color:#fff;
+      line-height:1.15;
+      letter-spacing:-.3px;
+      margin-bottom:44px;
+      transition:opacity .3s, transform .3s;
+    }
+    .exp-panel-kpi-lbl {
+      font-size:10px;
+      font-weight:700;
+      letter-spacing:3.5px;
+      text-transform:uppercase;
+      color:rgba(255,255,255,.3);
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin-bottom:14px;
+    }
+    .exp-panel-kpi-lbl::before,
+    .exp-panel-kpi-lbl::after {
+      content:'';
+      display:block;
+      height:1px;
+      width:28px;
+      background:rgba(255,255,255,.15);
+    }
+    .exp-panel-stat {
+      font-size:clamp(64px,7vw,100px);
+      font-weight:900;
+      color:#fff;
+      line-height:1;
+      margin-bottom:10px;
+      letter-spacing:-3px;
+      transition:opacity .3s, transform .3s;
+    }
+    .exp-panel-stat em { font-style:normal; color:var(--orange); font-size:.5em; }
+    .exp-panel-stat-lbl {
+      font-size:12px;
+      font-weight:700;
+      letter-spacing:2.5px;
+      text-transform:uppercase;
+      color:rgba(255,255,255,.35);
+      margin-bottom:52px;
+      transition:opacity .3s;
+    }
+    .exp-panel-cta {
+      font-size:12px;
+      font-weight:700;
+      letter-spacing:2.5px;
+      text-transform:uppercase;
+      color:rgba(255,255,255,.4);
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      transition:color .2s;
+    }
+    .exp-panel-cta:hover { color:var(--cyan); }
+    .exp-panel-cta svg { width:16px; height:16px; transition:transform .22s; }
+    .exp-panel-cta.is-entering {
+      color:var(--cyan);
+      pointer-events:none;
+    }
+    .exp-panel-cta.is-entering svg { transform:translateX(8px) scale(.92); }
+
+    /* DOTS */
+    .exp-dots {
+      position:absolute;
+      right:28px;
+      top:50%;
+      transform:translateY(-50%);
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      z-index:2;
+    }
+    .exp-dot {
+      width:5px;
+      height:5px;
+      border-radius:50%;
+      background:rgba(255,255,255,.2);
+      cursor:pointer;
+      transition:all .3s;
+    }
+    .exp-dot.active {
+      background:var(--cyan);
+      transform:scaleX(2.5);
+      border-radius:3px;
+    }
+
+    /* LEFT panel transition */
+    .exp-left-inner.leaving .exp-panel-label,
+    .exp-left-inner.leaving .exp-panel-title,
+    .exp-left-inner.leaving .exp-panel-stat,
+    .exp-left-inner.leaving .exp-panel-stat-lbl {
+      opacity:0;
+      transform:translateY(-14px);
+    }
+
+    /* RIGHT SCROLLABLE PANEL */
+    .exp-right {
+      background:#fff;
+    }
+    .exp-section {
+      min-height:100vh;
+      padding:100px 72px 80px 80px;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      border-bottom:1px solid #edf0f5;
+      position:relative;
+    }
+    .exp-section:last-child { border-bottom:none; }
+    .es-num {
+      font-size:11px;
+      font-weight:700;
+      letter-spacing:3px;
+      text-transform:uppercase;
+      color:var(--cyan);
+      display:flex;
+      align-items:center;
+      gap:16px;
+      margin-bottom:28px;
+    }
+    .es-num::after {
+      content:'';
+      display:block;
+      height:1px;
+      width:52px;
+      background:rgba(29,189,242,.3);
+    }
+    .es-title {
+      font-size:clamp(22px,2.8vw,36px);
+      font-weight:900;
+      color:var(--navy);
+      line-height:1.15;
+      letter-spacing:-.5px;
+      margin-bottom:24px;
+    }
+    .es-desc {
+      font-size:15px;
+      color:var(--gray);
+      line-height:1.85;
+      max-width:52ch;
+      margin-bottom:52px;
+    }
+    .es-services {
+      display:flex;
+      flex-direction:column;
+      gap:0;
+    }
+    .es-service {
+      display:flex;
+      align-items:center;
+      gap:24px;
+      padding:18px 0;
+      border-top:1px solid #edf0f5;
+      text-decoration:none;
+    }
+    .es-service:last-child { border-bottom:1px solid #edf0f5; }
+    .es-service-num {
+      font-size:10px;
+      font-weight:700;
+      letter-spacing:2px;
+      color:var(--cyan);
+      flex-shrink:0;
+      width:22px;
+    }
+    .es-service-name {
+      font-size:14px;
+      font-weight:700;
+      color:var(--navy);
+      flex:1;
+      transition:color .2s;
+      text-decoration:none;
+    }
+    a.es-service-name:hover { color:var(--cyan); }
+    .es-service:hover .es-service-name { color:var(--cyan); }
+    .es-link {
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      font-size:11px;
+      font-weight:700;
+      letter-spacing:2px;
+      text-transform:uppercase;
+      color:var(--navy);
+      text-decoration:none;
+      margin-top:40px;
+      padding:14px 28px;
+      border:1.5px solid #e0e8f0;
+      border-radius:6px;
+      align-self:flex-start;
+      transition:all .2s;
+    }
+    .es-link:hover { background:var(--navy); color:#fff; border-color:var(--navy); }
+    .es-link svg { width:14px; height:14px; transition:transform .2s; }
+    .es-link:hover svg { transform:translateX(4px); }
+    .es-link.is-entering {
+      background:var(--navy);
+      color:#fff;
+      border-color:var(--navy);
+      transform:translateY(1px) scale(.98);
+      pointer-events:none;
+    }
+    .es-link.is-entering svg { transform:translateX(8px) scale(.92); }
+
+    /* CTA section */
+    .exp-cta { background:var(--navy); padding:100px 0; position:relative; overflow:hidden; }
+    .exp-cta::before { content:'';position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(29,189,242,.09) 0%,transparent 65%);top:-250px;right:-150px;pointer-events:none; }
+    .exp-cta-inner { position:relative;z-index:1;display:grid;grid-template-columns:1fr auto;gap:48px;align-items:center; }
+    .exp-cta-tag { font-size:10px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--orange);margin-bottom:14px; }
+    .exp-cta h2 { font-size:clamp(26px,3.5vw,44px);color:#fff;line-height:1.15;letter-spacing:-.5px;margin-bottom:12px; }
+    .exp-cta p { color:rgba(255,255,255,.5);font-size:15px;line-height:1.8;max-width:46ch; }
+    .exp-cta-btns { display:flex;flex-direction:column;gap:12px;flex-shrink:0; }
+
+    @media(max-width:900px){
+      .exp-split { grid-template-columns:1fr; }
+      .exp-left { position:relative; height:auto; min-height:50vh; }
+      .exp-dots { right:20px; }
+      .exp-section { padding:72px 32px; min-height:auto; }
+      .exp-cta-inner { grid-template-columns:1fr; }
+      .exp-cta-btns { flex-direction:row;flex-wrap:wrap; }
+    }
+    @media(max-width:600px){
+      .hero-stats { gap:20px;flex-wrap:wrap; }
+      .hs-item { padding-right:20px;margin-right:20px; }
+      .exp-left-inner { padding:48px 32px; }
+    }
+  </style>
+</head>
+<body>
+<div class="mob-menu" id="mobMenu">
+  <button class="mob-close" onclick="closeMob()">✕</button>
+  <a href="index.html">Accueil</a><a href="a-propos.html">À propos</a>
+  <a href="expertises.html" class="active">Expertises</a><a href="secteurs.html">Secteurs</a>
+  <a href="transformation.html">Transformation</a><a href="publications.html">Publications</a>
+  <a href="carrieres.html">Carrières</a><a href="contact.html">Contact</a>
+  <div class="mob-lang-switch"><button class="lang-btn active">FR</button><button class="lang-btn" onclick="checkEnLang()">EN</button></div>
+</div>
+<nav class="navbar solid" id="navbar">
+  <div class="container"><div class="nav-inner">
+    <a href="index.html" class="nav-logo-link"><img src="logo-official.svg" class="nav-logo-img" alt="OPEO"/></a>
+    <ul class="nav-links">
+      <li><a href="a-propos.html">À propos</a></li>
+      <li><a href="expertises.html" class="active">Expertises</a></li>
+      <li class="has-drop"><a href="secteurs.html">Secteurs <svg class="drop-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></a><div class="nav-drop nav-drop-wide nav-drop-sec"><div class="mega-header"><span class="mega-label">Nos Secteurs</span></div><div class="drop-grid drop-grid-2"><a href="secteur-luxe.html" class="drop-card"><span class="drop-card-title">Luxe</span></a><a href="secteur-process.html" class="drop-card"><span class="drop-card-title">Industrie de Process</span></a><a href="secteur-aeronautique.html" class="drop-card"><span class="drop-card-title">Aéronautique & Défense</span></a><a href="secteur-pharma.html" class="drop-card"><span class="drop-card-title">Pharma & Santé</span></a></div></div></li>
+      <li><a href="transformation.html">Transformation</a></li>
+      <li><a href="publications.html">Publications</a></li>
+      <li><a href="carrieres.html">Carrières</a></li>
+      <li><a href="contact.html" class="cta-link">Contact</a></li>
+    </ul>
+    <div class="lang-switch"><button class="lang-btn active">FR</button><button class="lang-btn" onclick="checkEnLang()">EN</button></div>
+      <button class="hamburger" onclick="openMob()"><span></span><span></span><span></span></button>
+  </div></div>
+</nav>
+
+<section class="page-hero">
+  <div class="hero-exp-overlay"></div>
+  <div class="page-hero-grid"></div>
+  <div class="page-hero-blob"></div>
+  <div class="container">
+    <div class="page-hero-eyebrow"><div class="page-hero-line"></div><span class="page-hero-tag">Ce que nous faisons</span></div>
+    <h1>Nos <em>Expertises</em></h1>
+    <p>Notre différence réside dans notre engagement sur le terrain. Combinant vision stratégique, pragmatisme opérationnel et innovation pour transformer chaque défi en avantage compétitif.</p>
+  </div>
+</section>
+
+<div class="exp-split">
+
+  <!-- LEFT STICKY PANEL -->
+  <div class="exp-left">
+    <div class="exp-left-inner" id="expPanel">
+      <div class="exp-panel-label" id="panelLabel">STRATÉGIE INDUSTRIELLE</div>
+      <div class="exp-panel-title" id="panelTitle">Stratégie Industrielle &amp; Restructuration</div>
+      <div class="exp-panel-kpi-lbl">Indicateur clé</div>
+      <div class="exp-panel-stat" id="panelStat">700<em>+</em></div>
+      <div class="exp-panel-stat-lbl" id="panelStatLbl">Missions réalisées</div>
+      <div class="exp-ghost" id="panelGhost">01</div>
+    </div>
+    <div class="exp-dots" id="expDots">
+      <div class="exp-dot active" data-i="0"></div>
+      <div class="exp-dot" data-i="1"></div>
+      <div class="exp-dot" data-i="2"></div>
+      <div class="exp-dot" data-i="3"></div>
+      <div class="exp-dot" data-i="4"></div>
+    </div>
+  </div>
+
+  <!-- RIGHT SCROLLABLE PANEL -->
+  <div class="exp-right" id="expRight">
+
+    <div class="exp-section" data-i="0">
+      <div class="es-num">01</div>
+      <div class="es-title">Stratégie Industrielle &amp; Restructuration</div>
+      <div class="es-desc">Dans un environnement économique en constante mutation, les entreprises industrielles doivent relever des défis critiques pour rester compétitives. Nous allions rigueur financière, expertise opérationnelle et collaboration à tous les niveaux pour transformer les plans stratégiques en résultats concrets.</div>
+      <div class="es-services">
+        <div class="es-service"><a class="es-service-name" href="http://opeo-conseil-145654140.hs-sites-eu1.com/offre-due-dilligence" target="_blank" rel="noopener">OFFRE - DUE DILIGENCE OPÉRATIONNELLE</a></div>
+        <div class="es-service"><a class="es-service-name" href="http://opeo-conseil-145654140.hs-sites-eu1.com/offre-footprint-industriel-logistique" target="_blank" rel="noopener">OFFRE - FOOTPRINT INDUSTRIEL X LOGISTIQUE</a></div>
+        <div class="es-service"><a class="es-service-name" href="http://opeo-conseil-145654140.hs-sites-eu1.com/offre-réduction-des-coûts" target="_blank" rel="noopener">OFFRE - RÉDUCTION DES COÛTS</a></div>
+      </div>
+      
+    </div>
+
+    <div class="exp-section" data-i="1">
+      <div class="es-num">02</div>
+      <div class="es-title">Supply Chain</div>
+      <div class="es-desc">La supply chain est au cœur de la performance des entreprises. OPEO accompagne la transformation des opérations logistiques et industrielles pour répondre aux défis de compétitivité, délais et flexibilité avec une intervention directe sur le terrain, au plus près des équipes.</div>
+      <div class="es-services"></div>
+      
+    </div>
+
+    <div class="exp-section" data-i="2">
+      <div class="es-num">03</div>
+      <div class="es-title">Performance &amp; Excellence Opérationnelle</div>
+      <div class="es-desc">La performance opérationnelle ne se décide pas seul, elle se construit progressivement, dimension par dimension, équipe par équipe. OPEO agit sur les six leviers qui font la différence entre une amélioration ponctuelle et une transformation pérenne.</div>
+      <div class="es-services">
+        <div class="es-service"><span class="es-service-name">OFFRE - AÉRO RAMP-UP RENTABLE</span></div>
+        <div class="es-service"><a class="es-service-name" href="http://opeo-conseil-145654140.hs-sites-eu1.com/landing-page-offre-lean-augmenté" target="_blank" rel="noopener">OFFRE - LEAN AUGMENTÉ</a></div>
+      </div>
+      
+    </div>
+
+    <div class="exp-section" data-i="3">
+      <div class="es-num">04</div>
+      <div class="es-title">Recherche &amp; Développement</div>
+      <div class="es-desc">Dans un contexte de compétition accrue et d'accélération technologique, la R&amp;D est un levier stratégique majeur. OPEO accompagne les industriels dans la structuration et l'optimisation de leurs processus d'innovation pour réduire les délais et maximiser l'impact des investissements.</div>
+      <div class="es-services">
+        <div class="es-service"><a class="es-service-name" href="http://opeo-conseil-145654140.hs-sites-eu1.com/offre-transformation-de-site-réduction-de-coûts" target="_blank" rel="noopener">OFFRE - RÉDUCTION DE COÛTS DES SITES / PERFORMANCE DE SITE</a></div>
+        <div class="es-service"><a class="es-service-name" href="http://opeo-conseil-145654140.hs-sites-eu1.com/offre_amélioration_du_modèle_opérationnel_en_rd" target="_blank" rel="noopener">OFFRE - AMÉLIORATION DU MODÈLE OPÉRATIONNEL EN R&D</a></div>
+      </div>
+      
+    </div>
+
+    <div class="exp-section" data-i="4">
+      <div class="es-num">05</div>
+      <div class="es-title">Digital &amp; Data</div>
+      <div class="es-desc">Le digital n'est pas une fin en soi : c'est un levier de performance opérationnelle. OPEO accompagne les industriels dans leurs transformations numériques avec une approche pragmatique, ancrée dans la réalité du terrain, pour générer des gains mesurables et durables.</div>
+      <div class="es-services">
+        <div class="es-service"><a class="es-service-name" href="http://opeo-conseil-145654140.hs-sites-eu1.com/landing-page-offre-lean-augmenté" target="_blank" rel="noopener">OFFRE - LEAN AUGMENTÉ</a></div>
+        <div class="es-service"><a class="es-service-name" href="http://opeo-conseil-145654140.hs-sites-eu1.com/data-ia" target="_blank" rel="noopener">OFFRE - DIAGNOSTIC IA</a></div>
+        <div class="es-service"><a class="es-service-name" href="http://opeo-conseil-145654140.hs-sites-eu1.com/parcours-ia-industrielle-opeo-region-nouvelle-aquitaine" target="_blank" rel="noopener">OFFRE - IA INDUSTRIELLE OPEO X NOUVELLE-AQUITAINE</a></div>
+      </div>
+      
+    </div>
+
+  </div><!-- end exp-right -->
+</div><!-- end exp-split -->
+
+<!-- ORANGE CTA BAND -->
+<section class="orange-band">
+  <div class="container">
+    <div class="orange-band-inner reveal">
+      <div>
+        <div class="orange-band-eyebrow">Un défi opérationnel ?</div>
+        <h2>Parlons de votre<br>projet ensemble</h2>
+        <p>Nos experts sont disponibles pour analyser vos enjeux et vous proposer une approche sur mesure adaptée à votre secteur.</p>
+      </div>
+      <div class="orange-band-actions">
+        <a href="https://meetings-eu1.hubspot.com/wendy-lemba" class="btn btn-white" target="_blank" rel="noopener">Prendre rendez-vous →</a>
+        <a href="http://opeo-conseil-145654140.hs-sites-eu1.com/nos-offres-page-de-dispatch" class="btn btn-ghost-white" target="_blank" rel="noopener">Voir nos offres</a>
+        <a href="https://share-eu1.hsforms.com/2jHE10lqlTX6kVxjdNJJYng2epvgc" class="btn btn-ghost-white" target="_blank" rel="noopener">Télécharger la brochure</a>
+        <a href="contact.html#question" class="btn btn-ghost-white">Poser une question</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer"><div class="container">
+  <div class="footer-grid">
+    <div class="footer-brand"><a href="index.html" class="nav-logo-link"><img src="logo-official.svg" class="nav-logo-img" alt="OPEO"/></a><p>Cabinet de Conseil européen spécialisé dans la transformation des opérations industrielles.</p><div class="footer-socials"><a href="https://www.linkedin.com/company/opeo/" target="_blank" class="soc-link">in</a><a href="https://www.youtube.com/channel/UCHxWDzGkSoEmFhDaU6nbsCg" target="_blank" class="soc-link">▶</a></div></div>
+    
+    <div class="footer-col"><h4>À propos</h4><ul class="footer-nav"><li><a href="a-propos.html">Mission</a></li><li><a href="transformation.html">Transformation</a></li><li><a href="carrieres.html">Carrières</a></li></ul></div>
+    <div class="footer-col"><h4>Contact</h4><ul class="footer-nav"><li><a href="contact.html">Nous contacter</a></li><li><a href="publications.html">Publications</a></li></ul></div>
+  </div>
+  <div class="footer-bottom"><p>@OPEO 2025 · Tous droits réservés</p><div class="footer-tagline">Vos Opérations sont <em>Stratégiques</em></div><p>Mentions légales · CGV · Égalité H/F</p></div>
+</div></footer>
+
+<script>
+function openMob(){document.getElementById('mobMenu').classList.add('open');}
+function closeMob(){document.getElementById('mobMenu').classList.remove('open');}
+
+const revObs=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting){x.target.classList.add('on');revObs.unobserve(x.target);}}),{threshold:.08});
+document.querySelectorAll('.reveal').forEach(el=>revObs.observe(el));
+
+// Panel data
+const panels = [
+  { label:'STRATÉGIE INDUSTRIELLE', title:'Stratégie Industrielle &amp; Restructuration', stat:'700<em>+</em>', statLbl:'Missions réalisées', ghost:'01', href:'expertise-strategie.html' },
+  { label:'SUPPLY CHAIN', title:'Supply Chain', stat:'−60<em>%</em>', statLbl:'Lead time réduit', ghost:'02', href:'expertise-supply-chain.html' },
+  { label:'EXCELLENCE OPÉRATIONNELLE', title:'Performance &amp; Excellence Opérationnelle', stat:'+40<em>%</em>', statLbl:'Productivité', ghost:'03', href:'expertise-excellence.html' },
+  { label:'RECHERCHE &amp; DÉVELOPPEMENT', title:'Recherche &amp; Développement', stat:'−30<em>%</em>', statLbl:'Time-to-market', ghost:'04', href:'expertise-rd.html' },
+  { label:'DIGITAL &amp; DATA', title:'Digital &amp; Data', stat:'40<em>M€</em>', statLbl:'Potentiel créé', ghost:'05', href:'expertise-digital.html' },
+];
+
+const panel = document.getElementById('expPanel');
+const labelEl = document.getElementById('panelLabel');
+const titleEl = document.getElementById('panelTitle');
+const statEl = document.getElementById('panelStat');
+const statLblEl = document.getElementById('panelStatLbl');
+const ghostEl = document.getElementById('panelGhost');
+const dots = document.querySelectorAll('.exp-dot');
+let current = 0;
+
+function setPanel(i) {
+  if (i === current) return;
+  panel.classList.add('leaving');
+  setTimeout(() => {
+    const d = panels[i];
+    labelEl.innerHTML = d.label;
+    titleEl.innerHTML = d.title;
+    statEl.innerHTML = d.stat;
+    statLblEl.textContent = d.statLbl;
+    ghostEl.textContent = d.ghost;
+    dots.forEach((dot, idx) => dot.classList.toggle('active', idx === i));
+    current = i;
+    panel.classList.remove('leaving');
+  }, 280);
+}
+
+// Dots click
+dots.forEach(dot => {
+  dot.addEventListener('click', () => {
+    const i = parseInt(dot.dataset.i);
+    setPanel(i);
+    const section = document.querySelector(`.exp-section[data-i="${i}"]`);
+    if (section) section.scrollIntoView({ behavior: 'smooth' });
+  });
+});
+
+// Scroll-based panel switching - find section whose top is closest to 25% from viewport top
+const expSections = Array.from(document.querySelectorAll('.exp-section'));
+
+function updateActivePanel() {
+  const trigger = window.innerHeight * 0.35;
+  let best = 0;
+  let bestDist = Infinity;
+  expSections.forEach(s => {
+    const rect = s.getBoundingClientRect();
+    const dist = Math.abs(rect.top - trigger);
+    if (dist < bestDist) {
+      bestDist = dist;
+      best = parseInt(s.dataset.i);
+    }
+  });
+  setPanel(best);
+}
+
+window.addEventListener('scroll', updateActivePanel, { passive: true });
+updateActivePanel();
+
+document.addEventListener('click', function(e) {
+  const target = e.target.nodeType === 1 ? e.target : e.target.parentElement;
+  const link = target ? target.closest('a.es-link, a.exp-panel-cta, a.btn-rdv') : null;
+  if (!link || e.defaultPrevented) return;
+  if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+  if (typeof e.button === 'number' && e.button !== 0) return;
+
+  const href = link.getAttribute('href');
+  if (!href || href.startsWith('#') || link.target === '_blank' || link.hasAttribute('download')) return;
+
+  e.preventDefault();
+  link.classList.add('is-entering');
+  window.setTimeout(() => {
+    window.location.assign(link.href);
+  }, 360);
+}, true);
+</script>
+
+<!-- LANG MODAL -->
+<div class="lang-modal-overlay" id="langModal" onclick="closeLangModal()">
+  <div class="lang-modal" onclick="event.stopPropagation()">
+    <button class="lang-modal-close" onclick="closeLangModal()" aria-label="Fermer">&#x2715;</button>
+    <div class="lang-modal-ico">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+    </div>
+    <div class="lang-modal-kicker">EN &middot; English</div>
+    <h3>Version anglaise<br>en pr&eacute;paration</h3>
+    <p>Nous travaillons &agrave; la traduction de l&rsquo;ensemble de nos contenus en anglais. Revenez bient&ocirc;t.</p>
+    <a href="#" class="btn btn-navy" onclick="closeLangModal();return false;">Revenir au site &rarr;</a>
+  </div>
+</div>
+
+<script>
+/* Lang switch hover particles */
+(function(){
+  var lastT = 0;
+  document.querySelectorAll('.lang-btn:not(.active)').forEach(function(btn){
+    btn.addEventListener('pointermove', function(e){
+      var now = Date.now();
+      if(now - lastT < 100) return;
+      lastT = now;
+      var rect = btn.getBoundingClientRect();
+      var c = document.createElement('div');
+      c.className = 'lang-circle';
+      c.style.left = (e.clientX - rect.left) + 'px';
+      c.style.top  = (e.clientY - rect.top)  + 'px';
+      btn.appendChild(c);
+      requestAnimationFrame(function(){ c.classList.add('fade-in'); });
+      setTimeout(function(){ c.classList.replace('fade-in','fade-out'); }, 900);
+      setTimeout(function(){ c.remove(); }, 2100);
+    });
+  });
+})();
+</script>
+</body>
+</html>
