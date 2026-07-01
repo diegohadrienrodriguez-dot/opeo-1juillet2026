@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Actualités &amp; Publications - OPEO</title>
+  <link rel="stylesheet" href="styles.css"/>
+  <style>
+    /* ── Hero background photo ── */
+    .page-hero {
+      background:
+        linear-gradient(135deg, rgba(3,38,106,.72) 0%, rgba(3,38,106,.50) 60%, rgba(3,38,106,.38) 100%),
+        url("banniere-publications.jpg") center 40% / cover no-repeat;
+    }
+    .page-hero-blob { display:none; }
+
+    /* ══════════════════════════════════════════
+       FEATURED ARTICLE - split éditorial
+    ══════════════════════════════════════════ */
+    .feat {
+      display:grid;
+      grid-template-columns:58% 42%;
+      min-height:76vh;
+    }
+    .feat-left {
+      background:#fff;
+      padding:100px 80px 80px;
+      display:flex; flex-direction:column; justify-content:center;
+      position:relative; overflow:hidden;
+      clip-path:inset(0 100% 0 0);
+    }
+    .feat-ghost {
+      position:absolute; left:-16px; bottom:-30px;
+      font-size:200px; font-weight:900; line-height:1;
+      color:rgba(3,38,106,.04);
+      font-family:'Gotham','Helvetica Neue',sans-serif;
+      pointer-events:none; user-select:none; white-space:nowrap;
+    }
+    .feat-tag {
+      display:flex; align-items:center; gap:14px;
+      font-size:10px; font-weight:700; letter-spacing:4px; text-transform:uppercase;
+      color:var(--cyan); margin-bottom:28px;
+    }
+    .feat-tag::before { content:''; display:block; width:36px; height:2px; background:var(--orange); }
+    .feat-h {
+      font-size:clamp(26px,3.4vw,44px); font-weight:900; color:var(--navy);
+      line-height:1.15; letter-spacing:-.6px; margin-bottom:22px; max-width:22ch;
+      position:relative; z-index:1;
+    }
+    .feat-desc {
+      font-size:15px; color:var(--gray); line-height:1.9; max-width:50ch;
+      margin-bottom:44px; position:relative; z-index:1;
+    }
+    .feat-cta {
+      display:inline-flex; align-items:center; gap:14px;
+      font-size:11px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase;
+      color:var(--navy); text-decoration:none;
+      padding-bottom:5px; border-bottom:2px solid var(--cyan);
+      width:fit-content; transition:gap .3s var(--ease), color .2s;
+      position:relative; z-index:1;
+    }
+    .feat-cta:hover { gap:22px; color:var(--cyan); }
+    .feat-cta svg { width:16px; height:16px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+
+    .feat-right {
+      background:var(--navy); position:relative; overflow:hidden;
+      clip-path:inset(0 0 0 100%);
+    }
+    /* Geometric overlapping squares */
+    .feat-geo {
+      position:absolute; right:-60px; top:-60px;
+      width:380px; height:380px;
+      border:1px solid rgba(29,189,242,.1);
+      transform:rotate(18deg); pointer-events:none;
+    }
+    .feat-geo2 {
+      position:absolute; right:20px; top:20px;
+      width:380px; height:380px;
+      border:1px solid rgba(29,189,242,.05);
+      transform:rotate(35deg); pointer-events:none;
+    }
+    .feat-geo3 {
+      position:absolute; left:-80px; bottom:-80px;
+      width:260px; height:260px;
+      border:1px solid rgba(255,255,255,.04);
+      transform:rotate(10deg); pointer-events:none;
+    }
+    /* Diagonal accent line */
+    .feat-diag {
+      position:absolute; top:0; left:0; right:0; bottom:0; pointer-events:none;
+      overflow:hidden;
+    }
+    .feat-diag::after {
+      content:''; position:absolute;
+      width:1px; height:200%; background:rgba(29,189,242,.08);
+      top:-50%; left:40%; transform:rotate(25deg);
+    }
+    .feat-meta {
+      position:absolute; bottom:64px; left:60px; right:60px; z-index:1;
+    }
+    .feat-meta-badge {
+      display:inline-block;
+      font-size:9px; font-weight:700; letter-spacing:3px; text-transform:uppercase;
+      color:var(--cyan); border:1px solid rgba(29,189,242,.3);
+      padding:6px 16px; margin-bottom:20px;
+    }
+    .feat-meta-date {
+      font-size:11px; font-weight:700; letter-spacing:3px; text-transform:uppercase;
+      color:rgba(255,255,255,.35); margin-bottom:40px;
+    }
+    .feat-big-num {
+      font-size:88px; font-weight:900; color:#fff; line-height:1;
+      letter-spacing:-3px;
+    }
+    .feat-big-num span {
+      display:block; font-size:11px; font-weight:700; letter-spacing:3px;
+      text-transform:uppercase; color:rgba(255,255,255,.3); margin-top:8px;
+      font-weight:400; letter-spacing:2px;
+    }
+
+    /* ══════════════════════════════════════════
+       ARTICLE LIST - lignes éditoriales
+    ══════════════════════════════════════════ */
+    .pub-list {
+      background:#fff;
+      padding:96px 0 80px;
+    }
+    .pub-list-header {
+      display:flex; align-items:flex-end; justify-content:space-between;
+      margin-bottom:48px; flex-wrap:wrap; gap:20px;
+    }
+    .pub-filter {
+      display:flex; gap:36px; align-items:center;
+      border-bottom:1px solid #edf0f5;
+      padding-bottom:0;
+    }
+    .pf-btn {
+      padding:0 0 14px;
+      font-size:10px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase;
+      border:none; border-bottom:2px solid transparent;
+      background:transparent; color:#aab0be;
+      cursor:pointer; transition:all .25s;
+      position:relative; top:1px;
+    }
+    .pf-btn:hover { color:var(--navy); }
+    .pf-btn.active { color:var(--navy); border-bottom-color:var(--cyan); }
+
+    /* ── EDITORIAL GRID ── */
+    .art-grid {
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:0;
+      background:#fff !important;
+      border-left:1px solid #dde6f0;
+      border-top:1px solid #dde6f0;
+    }
+    .art-block {
+      background:#fff !important;
+      padding:40px 40px 36px;
+      display:flex; flex-direction:column;
+      text-decoration:none;
+      position:relative; overflow:hidden;
+      transition:background .25s;
+      min-height:220px;
+      border-right:1px solid #dde6f0;
+      border-bottom:1px solid #dde6f0;
+    }
+    .art-block.wide { grid-column:1 / -1; min-height:auto; }
+    .art-block.art-hidden {
+      display:none !important;
+    }
+
+    #artRows {
+      background:#fff !important;
+    }
+    .art-block::after {
+      content:''; position:absolute; top:0; left:0; right:0; height:3px;
+      background:var(--cyan);
+      transform:scaleX(0); transform-origin:left;
+      transition:transform .35s var(--ease);
+    }
+    .art-block.lb::after   { background:var(--navy); }
+    .art-block.tribune::after { background:#d46b1a; }
+    .art-block.temoin::after  { background:#6B7280; }
+    .art-block:hover { background:#fff; }
+    .art-block:hover::after { transform:scaleX(1); }
+    .art-block:hover .ab-title { color:var(--cyan); }
+    /* freeze hover FX during filter animation */
+    #artRows.is-animating .art-block { background:#fff !important; transition:none; }
+    #artRows.is-animating .art-block::after { transform:scaleX(0) !important; transition:none; }
+    #artRows.is-animating .art-block .ab-title { color:var(--navy) !important; transition:none; }
+
+    .ab-meta {
+      display:flex; align-items:center; justify-content:space-between;
+      margin-bottom:18px;
+    }
+    .ab-cat {
+      font-size:9px; font-weight:700; letter-spacing:3px; text-transform:uppercase;
+    }
+    .ab-cat.article { color:var(--cyan); }
+    .ab-cat.lb      { color:var(--navy); }
+    .ab-cat.tribune { color:#d46b1a; }
+    .ab-cat.temoin  { color:#6B7280; }
+    .ab-date { font-size:10px; color:#b0bac8; letter-spacing:1px; text-transform:uppercase; }
+
+    .ab-title {
+      font-size:18px; font-weight:700; color:var(--navy);
+      line-height:1.35; margin-bottom:12px;
+      flex:1; transition:color .25s;
+    }
+    .art-block.wide .ab-title { font-size:22px; max-width:60ch; }
+
+    .ab-desc { font-size:13px; color:var(--gray); line-height:1.75; margin-bottom:24px; }
+
+    .ab-link {
+      display:inline-flex; align-items:center; gap:8px;
+      font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase;
+      color:var(--navy); text-decoration:none;
+      margin-top:auto; transition:gap .25s, color .25s;
+    }
+    .ab-link svg { width:14px; height:14px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+    .art-block:hover .ab-link { gap:14px; color:var(--cyan); }
+    /* ── ab-footer: Lire + Télécharger row ── */
+    .ab-footer {
+      display:flex; align-items:center; justify-content:space-between;
+      margin-top:auto; gap:12px;
+    }
+    .ab-link { margin-top:0 !important; } /* override flex auto-margin */
+    .ab-dl {
+      display:inline-flex; align-items:center; gap:6px;
+      font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase;
+      color:#b0bac8; cursor:pointer; background:none; border:none; padding:0;
+      transition:color .25s;
+    }
+    .ab-dl svg { width:13px; height:13px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+    .art-block:hover .ab-dl { color:var(--navy); }
+
+    /* ══════════════════════════════════════════
+       EVENTS - grille colonnes navy
+    ══════════════════════════════════════════ */
+    .events-section {
+      background:var(--navy);
+      padding:96px 0 0;
+      overflow:hidden;
+    }
+    .events-header { margin-bottom:0; }
+    .events-grid {
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      margin-top:64px;
+      border-top:1px solid rgba(255,255,255,.07);
+      border-left:1px solid rgba(255,255,255,.07);
+    }
+    .ev-col {
+      padding:44px 44px 40px;
+      border-right:1px solid rgba(255,255,255,.07);
+      border-bottom:1px solid rgba(255,255,255,.07);
+      position:relative; overflow:hidden;
+      transition:background .3s;
+    }
+    .ev-col::before {
+      content:''; position:absolute; left:0; top:0; bottom:0;
+      width:3px; background:var(--cyan);
+      transform:scaleY(0); transform-origin:top;
+      transition:transform .4s var(--ease);
+    }
+    .ev-col:hover::before { transform:scaleY(1); }
+    .ev-col:hover { background:rgba(29,189,242,.04); }
+
+    .ev-col-year {
+      font-size:72px; font-weight:900; color:#fff; opacity:.06; line-height:1;
+      margin-bottom:32px; font-family:'Gotham','Helvetica Neue',sans-serif;
+      pointer-events:none;
+    }
+    .ev-col-type {
+      display:inline-block;
+      font-size:9px; font-weight:700; letter-spacing:3px; text-transform:uppercase;
+      color:var(--cyan); margin-bottom:14px;
+    }
+    .ev-col-date {
+      font-size:12px; font-weight:700; letter-spacing:1.5px;
+      color:rgba(255,255,255,.35); text-transform:uppercase;
+      margin-bottom:16px;
+    }
+    .ev-col-name {
+      font-size:17px; font-weight:700; color:#fff;
+      line-height:1.35; margin-bottom:16px;
+    }
+    .ev-col-loc {
+      font-size:12px; color:rgba(255,255,255,.35);
+      display:flex; align-items:center; gap:6px;
+    }
+    .ev-col-loc svg { width:12px; height:12px; stroke:var(--cyan); fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; flex-shrink:0; }
+    .ev-col-desc {
+      font-size:13px; color:rgba(255,255,255,.38);
+      line-height:1.75; margin-top:20px;
+      padding-top:20px; border-top:1px solid rgba(255,255,255,.06);
+    }
+
+    /* Events CTA strip */
+    .events-cta-strip {
+      padding:40px 0;
+      border-top:1px solid rgba(255,255,255,.07);
+      margin-top:0;
+      display:flex; align-items:center; justify-content:space-between;
+    }
+    .events-cta-strip p { color:rgba(255,255,255,.45); font-size:14px; }
+
+    /* ══════════════════════════════════════════
+       NEWSLETTER - épuré, sans arrondi
+    ══════════════════════════════════════════ */
+    .newsletter {
+      background:#f0f5fc;
+      padding:96px 0;
+      border-top:1px solid #dce6f0;
+    }
+    .nl-wrap {
+      display:grid; grid-template-columns:1fr 1fr;
+      gap:80px; align-items:center;
+    }
+    .nl-left h2 {
+      font-size:clamp(24px,3vw,38px); color:var(--navy);
+      line-height:1.18; letter-spacing:-.4px; margin-bottom:16px;
+    }
+    .nl-left p { font-size:15px; color:var(--gray); line-height:1.85; }
+    .nl-form { display:flex; gap:0; }
+    .nl-input {
+      flex:1; padding:16px 22px;
+      border:2px solid #c0cde0; border-right:none;
+      font-size:14px; background:#fff; outline:none;
+      border-radius:2px 0 0 2px;
+      transition:border-color .2s;
+    }
+    .nl-input:focus { border-color:var(--cyan); }
+    .nl-submit {
+      padding:16px 32px; background:var(--navy); color:#fff;
+      font-size:10px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase;
+      border:none; cursor:pointer; border-radius:0 2px 2px 0;
+      transition:background .22s; white-space:nowrap;
+    }
+    .nl-submit:hover { background:var(--cyan); }
+    .nl-stats {
+      display:flex; gap:40px; margin-top:40px;
+      padding-top:36px; border-top:1px solid #d0daea;
+    }
+    .nl-stat-num { font-size:28px; font-weight:900; color:var(--navy); line-height:1; }
+    .nl-stat-lbl { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#8a96aa; margin-top:4px; }
+
+    /* ══════════════════════════════════════════
+       SECTION LABEL STYLE
+    ══════════════════════════════════════════ */
+    .s-eyebrow {
+      display:flex; align-items:center; gap:14px;
+      font-size:10px; font-weight:700; letter-spacing:4px;
+      text-transform:uppercase; color:var(--cyan);
+      margin-bottom:16px;
+    }
+    .s-eyebrow::before { content:''; display:block; width:32px; height:2px; background:var(--orange); }
+    .s-eyebrow.light { color:var(--cyan); }
+
+    /* ══════════════════════════════════════════
+       RESPONSIVE
+    ══════════════════════════════════════════ */
+    @media(max-width:1100px){
+      .feat { grid-template-columns:1fr; }
+      .feat-right { min-height:280px; }
+      .art-row { grid-template-columns:56px 110px 1fr auto; gap:18px; }
+      .events-grid { grid-template-columns:1fr 1fr; }
+      .nl-wrap { grid-template-columns:1fr; gap:40px; }
+    }
+    @media(max-width:700px){
+      .feat-left { padding:64px 28px; }
+      .art-row { grid-template-columns:1fr auto; gap:16px; }
+      .ar-num, .ar-badge { display:none; }
+      .events-grid { grid-template-columns:1fr; }
+      .pub-list-header { flex-direction:column; align-items:flex-start; }
+      .nl-form { flex-direction:column; }
+      .nl-input { border-right:2px solid #c0cde0; border-radius:2px 2px 0 0; }
+      .nl-submit { border-radius:0 0 2px 2px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="mob-menu" id="mobMenu">
+  <button class="mob-close" onclick="closeMob()">✕</button>
+  <a href="index.html">Accueil</a><a href="a-propos.html">À propos</a>
+  <a href="expertises.html">Expertises</a><a href="secteurs.html">Secteurs</a>
+  <a href="transformation.html">Transformation</a><a href="publications.html" class="active">Publications</a>
+  <a href="carrieres.html">Carrières</a><a href="contact.html">Contact</a>
+  <div class="mob-lang-switch"><button class="lang-btn active">FR</button><button class="lang-btn" onclick="checkEnLang()">EN</button></div>
+</div>
+<nav class="navbar solid" id="navbar">
+  <div class="container"><div class="nav-inner">
+    <a href="index.html" class="nav-logo-link"><img src="logo-official.svg" class="nav-logo-img" alt="OPEO"/></a>
+    <ul class="nav-links">
+      <li><a href="a-propos.html">À propos</a></li>
+      <li><a href="expertises.html">Expertises</a></li>
+      <li class="has-drop"><a href="secteurs.html">Secteurs <svg class="drop-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></a><div class="nav-drop nav-drop-wide nav-drop-sec"><div class="mega-header"><span class="mega-label">Nos Secteurs</span></div><div class="drop-grid drop-grid-2"><a href="secteur-luxe.html" class="drop-card"><span class="drop-card-title">Luxe</span></a><a href="secteur-process.html" class="drop-card"><span class="drop-card-title">Industrie de Process</span></a><a href="secteur-aeronautique.html" class="drop-card"><span class="drop-card-title">Aéronautique & Défense</span></a><a href="secteur-pharma.html" class="drop-card"><span class="drop-card-title">Pharma & Santé</span></a></div></div></li>
+      <li><a href="transformation.html">Transformation</a></li>
+      <li><a href="publications.html" class="active">Publications</a></li>
+      <li><a href="carrieres.html">Carrières</a></li>
+      <li><a href="contact.html" class="cta-link">Contact</a></li>
+    </ul>
+    <div class="lang-switch"><button class="lang-btn active">FR</button><button class="lang-btn" onclick="checkEnLang()">EN</button></div>
+      <button class="hamburger" onclick="openMob()"><span></span><span></span><span></span></button>
+  </div></div>
+</nav>
+
+<!-- ══ HERO ══ -->
+<section class="page-hero">
+  <div class="page-hero-grid"></div><div class="page-hero-blob"></div>
+  <div class="container">
+    <div class="page-hero-eyebrow"><div class="page-hero-line"></div><span class="page-hero-tag">Nos contributions</span></div>
+    <h1>Actualités &amp; <em>Publications</em></h1>
+    <p>Articles, livres blancs, tribunes, événements - OPEO s'engage pour l'industrie et partage ses analyses avec les décideurs industriels européens.</p>
+  </div>
+</section>
+
+<!-- ══ FEATURED ARTICLE ══ -->
+<div class="feat" id="featSection">
+  <div class="feat-left" id="featLeft">
+    <div class="feat-ghost">01</div>
+    <div class="feat-tag">Article à la une</div>
+    <h2 class="feat-h">L'industrie donne le ton pour l'avenir de la France et de l'Europe</h2>
+    <p class="feat-desc">Analyse de la place de l'industrie dans la souveraineté économique européenne et les défis à relever pour rester compétitif dans un monde en mutation accélérée.</p>
+    <a href="article-example.html" class="feat-cta">
+      Lire l'article
+      <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+  </div>
+  <div class="feat-right" id="featRight">
+    <div class="feat-geo"></div>
+    <div class="feat-geo2"></div>
+    <div class="feat-geo3"></div>
+    <div class="feat-diag"></div>
+    <div class="feat-meta">
+      <div class="feat-meta-badge">Article</div>
+      <div class="feat-meta-date">Mars 2026 · Stratégie Industrielle</div>
+      <div class="feat-big-num">
+        700<sup style="font-size:.4em; vertical-align:top; color:var(--cyan)">+</sup>
+        <span>Missions réalisées par OPEO</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ ARTICLE LIST ══ -->
+<section class="pub-list">
+  <div class="container">
+    <div class="pub-list-header">
+      <div>
+        <div class="s-eyebrow sec-reveal">Toutes les publications</div>
+        <h2 class="section-title sec-reveal" style="margin-bottom:0">Nos articles &amp; analyses</h2>
+      </div>
+      <div class="pub-filter sec-reveal">
+        <button class="pf-btn active" onclick="filterPub('all',this)">Tous</button>
+        <button class="pf-btn" onclick="filterPub('article',this)">Articles</button>
+        <button class="pf-btn" onclick="filterPub('lb',this)">Livres blancs</button>
+        <button class="pf-btn" onclick="filterPub('tribune',this)">Tribunes</button>
+        <button class="pf-btn" onclick="filterPub('temoin',this)">Témoignages</button>
+      </div>
+    </div>
+
+    <div class="art-grid" id="artRows">
+
+      <a href="article-example.html" class="art-block article wide" data-type="article">
+        <div class="ab-meta"><span class="ab-cat article">Article</span><span class="ab-date">Mars 2026</span></div>
+        <div class="ab-title">L'industrie donne le ton pour l'avenir de la France et de l'Europe</div>
+        <div class="ab-desc">Analyse de la place de l'industrie dans la souveraineté économique européenne et les défis à relever pour rester compétitif dans un monde en mutation accélérée.</div>
+        <div class="ab-footer"><span class="ab-link">Lire l'article <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+          <span class="ab-dl" onclick="event.stopPropagation();" role="button" tabindex="0">Télécharger <svg viewBox="0 0 24 24"><path d="M12 3v12M7 11l5 5 5-5M3 19h18"/></svg></span>
+        </div>
+      </a>
+
+      <a href="article-example.html" class="art-block article" data-type="article">
+        <div class="ab-meta"><span class="ab-cat article">Article</span><span class="ab-date">Fév. 2026</span></div>
+        <div class="ab-title">De 2012 à 2026 : l'aventure digitale d'OPEO</div>
+        <div class="ab-desc">Retour sur 14 ans de transformation digitale et les enseignements pour les industriels.</div>
+        <div class="ab-footer"><span class="ab-link">Lire <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+          <span class="ab-dl" onclick="event.stopPropagation();" role="button" tabindex="0">Télécharger <svg viewBox="0 0 24 24"><path d="M12 3v12M7 11l5 5 5-5M3 19h18"/></svg></span>
+        </div>
+      </a>
+
+      <a href="article-example.html" class="art-block lb" data-type="lb">
+        <div class="ab-meta"><span class="ab-cat lb">Livre blanc</span><span class="ab-date">Jan. 2026</span></div>
+        <div class="ab-title">Souveraineté pharmaceutique européenne : le défi industriel silencieux</div>
+        <div class="ab-desc">Produire des médicaments ou produire des contrôles ? Et l'intendance suivra vraiment ?</div>
+        <div class="ab-footer"><span class="ab-link">Lire <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+          <span class="ab-dl" onclick="event.stopPropagation();" role="button" tabindex="0">Télécharger <svg viewBox="0 0 24 24"><path d="M12 3v12M7 11l5 5 5-5M3 19h18"/></svg></span>
+        </div>
+      </a>
+
+      <a href="article-example.html" class="art-block article" data-type="article">
+        <div class="ab-meta"><span class="ab-cat article">Article</span><span class="ab-date">Déc. 2025</span></div>
+        <div class="ab-title">Du terrain à la sérénité opérationnelle</div>
+        <div class="ab-desc">Comment ancrer durablement le changement par la proximité terrain et le geste humain.</div>
+        <div class="ab-footer"><span class="ab-link">Lire <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+          <span class="ab-dl" onclick="event.stopPropagation();" role="button" tabindex="0">Télécharger <svg viewBox="0 0 24 24"><path d="M12 3v12M7 11l5 5 5-5M3 19h18"/></svg></span>
+        </div>
+      </a>
+
+      <a href="article-example.html" class="art-block tribune" data-type="tribune">
+        <div class="ab-meta"><span class="ab-cat tribune">Tribune</span><span class="ab-date">Nov. 2025</span></div>
+        <div class="ab-title">Réinventer les modèles industriels : les enseignements de David Machenaud</div>
+        <div class="ab-desc">Quand repenser le modèle industriel devient une nécessité stratégique pour la compétitivité européenne.</div>
+        <div class="ab-footer"><span class="ab-link">Lire <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+          <span class="ab-dl" onclick="event.stopPropagation();" role="button" tabindex="0">Télécharger <svg viewBox="0 0 24 24"><path d="M12 3v12M7 11l5 5 5-5M3 19h18"/></svg></span>
+        </div>
+      </a>
+
+      <a href="article-example.html" class="art-block temoin" data-type="temoin">
+        <div class="ab-meta"><span class="ab-cat temoin">Témoignage</span><span class="ab-date">Oct. 2025</span></div>
+        <div class="ab-title">Quand les process freinent la performance : retour d'expérience d'un dirigeant</div>
+        <div class="ab-desc">Comment transformer ses processus internes pour libérer la performance des équipes.</div>
+        <div class="ab-footer"><span class="ab-link">Lire <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+          <span class="ab-dl" onclick="event.stopPropagation();" role="button" tabindex="0">Télécharger <svg viewBox="0 0 24 24"><path d="M12 3v12M7 11l5 5 5-5M3 19h18"/></svg></span>
+        </div>
+      </a>
+
+      <a href="article-example.html" class="art-block tribune" data-type="tribune">
+        <div class="ab-meta"><span class="ab-cat tribune">Tribune</span><span class="ab-date">Sept. 2025</span></div>
+        <div class="ab-title">Et l'intendance suivra vraiment ? Politique industrielle : qui tient le cap ?</div>
+        <div class="ab-desc">Réflexion sur la politique industrielle européenne et les acteurs qui définissent la trajectoire.</div>
+        <div class="ab-footer"><span class="ab-link">Lire <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+          <span class="ab-dl" onclick="event.stopPropagation();" role="button" tabindex="0">Télécharger <svg viewBox="0 0 24 24"><path d="M12 3v12M7 11l5 5 5-5M3 19h18"/></svg></span>
+        </div>
+      </a>
+
+      <a href="brochure-opeo.pdf" download class="art-block lb" data-type="lb">
+        <div class="ab-meta"><span class="ab-cat lb">Livre blanc</span><span class="ab-date">2025</span></div>
+        <div class="ab-title">Notre brochure OPEO</div>
+        <div class="ab-desc">Découvrez notre approche de la transformation industrielle, nos expertises et nos secteurs d'intervention.</div>
+        <div class="ab-footer"><span class="ab-link">Télécharger <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+          <span class="ab-dl" onclick="event.stopPropagation();" role="button" tabindex="0">Télécharger <svg viewBox="0 0 24 24"><path d="M12 3v12M7 11l5 5 5-5M3 19h18"/></svg></span>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══ ÉVÉNEMENTS ══ -->
+<section class="events-section">
+  <div class="container">
+    <div class="events-header">
+      <div class="s-eyebrow light sec-reveal">Agenda 2026</div>
+      <div style="display:flex; align-items:flex-end; justify-content:space-between; flex-wrap:wrap; gap:20px;">
+        <h2 class="section-title sec-reveal" style="color:#fff; margin-bottom:0;">Événements &amp; Salons</h2>
+        <p class="sec-reveal" style="color:rgba(255,255,255,.4); font-size:14px; max-width:40ch; text-align:right;">Retrouvez OPEO sur les grands rendez-vous de l'industrie européenne.</p>
+      </div>
+    </div>
+
+    <div class="events-grid">
+
+      <div class="ev-col">
+        <div class="ev-col-year">2026</div>
+        <span class="ev-col-type">Salon</span>
+        <div class="ev-col-date">15 – 17 Avr. 2026</div>
+        <div class="ev-col-name">Global Industrie Paris</div>
+        <div class="ev-col-loc"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Paris - Parc des Expositions</div>
+        <div class="ev-col-desc">OPEO présent sur le salon - retrouvez nos consultants pour échanger sur vos enjeux de transformation industrielle.</div>
+      </div>
+
+      <div class="ev-col">
+        <div class="ev-col-year">2026</div>
+        <span class="ev-col-type">Conférence</span>
+        <div class="ev-col-date">22 Mai 2026</div>
+        <div class="ev-col-name">Forum Pharma &amp; Santé Industrie</div>
+        <div class="ev-col-loc"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Paris - Palais des Congrès</div>
+        <div class="ev-col-desc">Table ronde animée par OPEO : « Souveraineté pharmaceutique et industrialisation en Europe ».</div>
+      </div>
+
+      <div class="ev-col">
+        <div class="ev-col-year">2026</div>
+        <span class="ev-col-type">Salon</span>
+        <div class="ev-col-date">16 – 22 Juin 2026</div>
+        <div class="ev-col-name">Paris Air Show - Le Bourget</div>
+        <div class="ev-col-loc"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Le Bourget</div>
+        <div class="ev-col-desc">OPEO au cœur de l'aéronautique mondiale - rencontres avec les acteurs industriels de la défense et du spatial.</div>
+      </div>
+
+      <div class="ev-col">
+        <div class="ev-col-year">2026</div>
+        <span class="ev-col-type">Forum</span>
+        <div class="ev-col-date">10 Sept. 2026</div>
+        <div class="ev-col-name">Forum de l'Excellence Opérationnelle</div>
+        <div class="ev-col-loc"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Lyon</div>
+        <div class="ev-col-desc">Intervention d'un partner OPEO : retour d'expérience sur la transformation des opérations dans l'industrie de process.</div>
+      </div>
+
+      <div class="ev-col">
+        <div class="ev-col-year">2026</div>
+        <span class="ev-col-type">Salon</span>
+        <div class="ev-col-date">14 – 16 Oct. 2026</div>
+        <div class="ev-col-name">Luxe Pack Monaco</div>
+        <div class="ev-col-loc"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Monaco</div>
+        <div class="ev-col-desc">OPEO aux côtés des acteurs du Luxe pour explorer les enjeux de compétitivité et de durabilité dans la filière.</div>
+      </div>
+
+      <div class="ev-col">
+        <div class="ev-col-year">2026</div>
+        <span class="ev-col-type">Conférence</span>
+        <div class="ev-col-date">18 – 20 Nov. 2026</div>
+        <div class="ev-col-name">Industrie du Futur Summit</div>
+        <div class="ev-col-loc"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Strasbourg</div>
+        <div class="ev-col-desc">Conférence plénière OPEO : « IA &amp; Digital au service de la performance industrielle : retours du terrain ».</div>
+      </div>
+
+    </div>
+
+    <div class="events-cta-strip">
+      <p>Vous souhaitez rencontrer nos équipes sur un événement ?</p>
+      <a href="contact.html" class="btn-rdv">
+        <span class="btn-rdv-label">Prendre un RDV</span>
+        <i class="btn-rdv-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></i>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ══ NEWSLETTER ══ -->
+<section class="newsletter">
+  <div class="container">
+    <div class="nl-wrap">
+      <div class="nl-left sec-reveal">
+        <div class="s-eyebrow">Newsletter mensuelle</div>
+        <h2>Abonnez-vous à notre newsletter mensuelle</h2>
+        <p>Chaque mois, recevez nos analyses, retours d'expérience et tendances clés pour les décideurs industriels européens - directement dans votre boîte mail.</p>
+        <div class="nl-stats">
+          <div><div class="nl-stat-num">700<sup style="font-size:.55em;color:var(--cyan)">+</sup></div><div class="nl-stat-lbl">Missions</div></div>
+          <div><div class="nl-stat-num">50<sup style="font-size:.55em;color:var(--cyan)">+</sup></div><div class="nl-stat-lbl">Consultants</div></div>
+          <div><div class="nl-stat-num">10<sup style="font-size:.55em;color:var(--cyan)">+</sup></div><div class="nl-stat-lbl">Ans d'expertise</div></div>
+        </div>
+      </div>
+      <div class="sec-reveal">
+        <div class="nl-form">
+          <input type="email" class="nl-input" placeholder="votre@email.com"/>
+          <button class="nl-submit">S'abonner</button>
+        </div>
+        <p style="font-size:12px; color:#8a96aa; margin-top:14px; line-height:1.6;">En vous abonnant, vous acceptez de recevoir nos communications. Désabonnement possible à tout moment.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ORANGE CTA BAND -->
+<section class="orange-band">
+  <div class="container">
+    <div class="orange-band-inner reveal">
+      <div>
+        <div class="orange-band-eyebrow">Restez connectés</div>
+        <h2>Ces sujets vous parlent ?<br>Parlons de vos enjeux.</h2>
+        <p>Nos publications reflètent les transformations que nous vivons sur le terrain avec nos clients. Échangeons sur vos défis opérationnels.</p>
+      </div>
+      <div class="orange-band-actions">
+        <a href="https://meetings-eu1.hubspot.com/wendy-lemba" class="btn btn-white" target="_blank" rel="noopener">Prendre rendez-vous →</a>
+        <a href="http://opeo-conseil-145654140.hs-sites-eu1.com/nos-offres-page-de-dispatch" class="btn btn-ghost-white" target="_blank" rel="noopener">Voir nos offres</a>
+        <a href="https://share-eu1.hsforms.com/2jHE10lqlTX6kVxjdNJJYng2epvgc" class="btn btn-ghost-white" target="_blank" rel="noopener">Télécharger la brochure</a>
+        <a href="contact.html#question" class="btn btn-ghost-white">Poser une question</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer"><div class="container">
+  <div class="footer-grid">
+    <div class="footer-brand"><a href="index.html" class="nav-logo-link"><img src="logo-official.svg" class="nav-logo-img" alt="OPEO"/></a><p>Cabinet de Conseil européen spécialisé dans la transformation des opérations industrielles.</p><div class="footer-socials"><a href="https://www.linkedin.com/company/opeo/" target="_blank" class="soc-link">in</a><a href="https://www.youtube.com/channel/UCHxWDzGkSoEmFhDaU6nbsCg" target="_blank" class="soc-link">▶</a></div></div>
+    <div class="footer-col"><h4>Publications</h4><ul class="footer-nav"><li><a href="publications.html">Articles</a></li><li><a href="publications.html">Livres blancs</a></li><li><a href="publications.html">Tribunes</a></li><li><a href="publications.html">Témoignages</a></li></ul></div>
+    <div class="footer-col"><h4>À propos</h4><ul class="footer-nav"><li><a href="a-propos.html">Mission</a></li><li><a href="expertises.html">Expertises</a></li><li><a href="carrieres.html">Carrières</a></li></ul></div>
+    <div class="footer-col"><h4>Contact</h4><ul class="footer-nav"><li><a href="contact.html">Nous contacter</a></li><li><a href="carrieres.html">Rejoindre OPEO</a></li></ul></div>
+  </div>
+  <div class="footer-bottom"><p>@OPEO 2026 · Tous droits réservés</p><div class="footer-tagline">Vos Opérations sont <em>Stratégiques</em></div><p>Mentions légales · CGV · Égalité H/F</p></div>
+</div></footer>
+
+<!-- GSAP -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/Flip.min.js"></script>
+
+<script>
+function openMob(){document.getElementById('mobMenu').classList.add('open');}
+function closeMob(){document.getElementById('mobMenu').classList.remove('open');}
+
+/* ── Filter with GSAP Flip ── */
+gsap.registerPlugin(ScrollTrigger, Flip);
+
+function filterPub(type, btn) {
+  document.querySelectorAll('.pf-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  const items = gsap.utils.toArray('#artRows .art-block');
+
+  // Capture positions before DOM change
+  const state = Flip.getState(items);
+
+  // Toggle visibility
+  items.forEach(item => {
+    const match = type === 'all' || item.dataset.type === type;
+    item.classList.toggle('art-hidden', !match);
+    // Restore .wide on the first article only when showing all
+    if (item.classList.contains('art-wide-orig')) {
+      item.classList.toggle('wide', type === 'all' || (type === 'article' && item.dataset.type === 'article'));
+    }
+  });
+
+  // Freeze hover states during animation
+  const grid = document.getElementById('artRows');
+  grid.classList.add('is-animating');
+
+  // Animate from old positions to new
+  Flip.from(state, {
+    duration: 0.55,
+    scale: true,
+    ease: 'power1.inOut',
+    stagger: 0.045,
+    absolute: true,
+    onEnter: elements =>
+      gsap.fromTo(elements,
+        { opacity: 0, scale: 0.82 },
+        { opacity: 1, scale: 1, duration: 0.55, ease: 'back.out(1.5)' }
+      ),
+    onLeave: elements =>
+      gsap.to(elements, { opacity: 0, scale: 0.82, duration: 0.3 }),
+    onComplete: () => grid.classList.remove('is-animating'),
+  });
+}
+
+/* mark the wide article so we can restore it */
+document.addEventListener('DOMContentLoaded', () => {
+  const wide = document.querySelector('#artRows .art-block.wide');
+  if (wide) wide.classList.add('art-wide-orig');
+});
+
+// Featured article: clip-path reveal from both sides
+gsap.to('#featLeft', {
+  clipPath: 'inset(0 0% 0 0)',
+  duration: 1.2,
+  ease: 'power4.inOut',
+  scrollTrigger: {
+    trigger: '#featSection',
+    start: 'top 80%',
+  }
+});
+gsap.to('#featRight', {
+  clipPath: 'inset(0 0 0 0%)',
+  duration: 1.2,
+  delay: 0.18,
+  ease: 'power4.inOut',
+  scrollTrigger: {
+    trigger: '#featSection',
+    start: 'top 80%',
+  }
+});
+
+// Section headings slide up
+gsap.utils.toArray('.sec-reveal').forEach(el => {
+  gsap.from(el, {
+    y: 36, opacity: 0, duration: 0.85, ease: 'power3.out',
+    scrollTrigger: { trigger: el, start: 'top 90%' }
+  });
+});
+
+// Article rows: batch stagger reveal
+ScrollTrigger.batch('.art-row', {
+  onEnter: batch => {
+    gsap.from(batch, {
+      y: 32, opacity: 0,
+      duration: 0.65, ease: 'power3.out',
+      stagger: 0.07,
+      overwrite: true
+    });
+  },
+  start: 'top 92%',
+  once: true
+});
+
+// Event columns: stagger from x
+ScrollTrigger.batch('.ev-col', {
+  onEnter: batch => {
+    gsap.from(batch, {
+      x: 48, opacity: 0,
+      duration: 0.75, ease: 'power3.out',
+      stagger: 0.09,
+      overwrite: true
+    });
+  },
+  start: 'top 88%',
+  once: true
+});
+
+// Featured right panel: geo squares subtle rotation scrub
+gsap.to('.feat-geo', {
+  rotate: 28,
+  scrollTrigger: {
+    trigger: '#featSection',
+    start: 'top bottom',
+    end: 'bottom top',
+    scrub: 1.5
+  }
+});
+gsap.to('.feat-geo2', {
+  rotate: 50,
+  scrollTrigger: {
+    trigger: '#featSection',
+    start: 'top bottom',
+    end: 'bottom top',
+    scrub: 2
+  }
+});
+
+// Reveal observer (pour .orange-band-inner et autres .reveal)
+const revObs = new IntersectionObserver(
+  e => e.forEach(x => { if(x.isIntersecting){ x.target.classList.add('on'); revObs.unobserve(x.target); } }),
+  { threshold: 0.12, rootMargin: '0px 0px -50px 0px' }
+);
+document.querySelectorAll('.reveal').forEach(el => revObs.observe(el));
+</script>
+
+<!-- LANG MODAL -->
+<div class="lang-modal-overlay" id="langModal" onclick="closeLangModal()">
+  <div class="lang-modal" onclick="event.stopPropagation()">
+    <button class="lang-modal-close" onclick="closeLangModal()" aria-label="Fermer">&#x2715;</button>
+    <div class="lang-modal-ico">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+    </div>
+    <div class="lang-modal-kicker">EN &middot; English</div>
+    <h3>Version anglaise<br>en pr&eacute;paration</h3>
+    <p>Nous travaillons &agrave; la traduction de l&rsquo;ensemble de nos contenus en anglais. Revenez bient&ocirc;t.</p>
+    <a href="#" class="btn btn-navy" onclick="closeLangModal();return false;">Revenir au site &rarr;</a>
+  </div>
+</div>
+
+<script>
+/* Lang switch hover particles */
+(function(){
+  var lastT = 0;
+  document.querySelectorAll('.lang-btn:not(.active)').forEach(function(btn){
+    btn.addEventListener('pointermove', function(e){
+      var now = Date.now();
+      if(now - lastT < 100) return;
+      lastT = now;
+      var rect = btn.getBoundingClientRect();
+      var c = document.createElement('div');
+      c.className = 'lang-circle';
+      c.style.left = (e.clientX - rect.left) + 'px';
+      c.style.top  = (e.clientY - rect.top)  + 'px';
+      btn.appendChild(c);
+      requestAnimationFrame(function(){ c.classList.add('fade-in'); });
+      setTimeout(function(){ c.classList.replace('fade-in','fade-out'); }, 900);
+      setTimeout(function(){ c.remove(); }, 2100);
+    });
+  });
+})();
+</script>
+</body>
+</html>

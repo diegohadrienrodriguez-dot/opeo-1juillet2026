@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Secteurs - OPEO</title>
+  <link rel="stylesheet" href="styles.css"/>
+  <style>
+    /* ── PAGE HERO BACKGROUND PHOTO ── */
+    section.page-hero {
+      background-image: url('viseul-secteurs.png') !important;
+      background-position: center !important;
+      background-size: cover !important;
+      background-repeat: no-repeat !important;
+    }
+    .hero-sectors-overlay {
+      position:absolute; inset:0; z-index:1;
+      background: linear-gradient(
+        to right,
+        rgba(3,38,106,.72) 0%,
+        rgba(3,38,106,.48) 50%,
+        rgba(3,38,106,.32) 100%
+      );
+    }
+    .page-hero .page-hero-grid,
+    .page-hero .page-hero-blob { z-index:2; }
+    .page-hero .container { z-index:3 !important; }
+
+    .secteurs-intro { background:#fff; padding:60px 0 80px; }
+
+
+    .sec-panel{display:none;}
+    .sec-panel.active{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start;animation:fadeIn .4s var(--ease);}
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+    .sec-panel-content h2{font-size:clamp(26px,3.5vw,40px);margin-bottom:16px;}
+    .sec-panel-content > p{color:var(--gray);font-size:16px;line-height:1.85;margin-bottom:28px;}
+    .sec-subsectors{display:flex;flex-direction:column;gap:10px;margin-bottom:28px;}
+    .sec-sub-item{background:var(--offwhite);border-radius:8px;padding:14px 18px;display:flex;align-items:center;gap:12px;font-size:14px;color:var(--dark);font-weight:600;border-left:3px solid var(--orange);}
+    .sec-sub-ico{font-size:20px;}
+
+    /* ── CAS CLIENTS CAROUSEL ── */
+    .sec-visual {
+      border-radius:18px; overflow:hidden;
+      background:var(--navy);
+      display:flex; flex-direction:column;
+    }
+    .cas-track-wrap { overflow:hidden; position:relative; width:100%; min-width:0; }
+    .cas-track {
+      display:flex;
+      transition:transform .42s cubic-bezier(0.4,0,0.2,1);
+      will-change:transform;
+    }
+    .cas-slide { flex:0 0 100%; display:flex; flex-direction:column; }
+
+    /* Photo zone - remplacez src par vos photos */
+    .cas-img-wrap {
+      position:relative; height:210px; overflow:hidden; flex-shrink:0;
+    }
+    .cas-img {
+      width:100%; height:100%; object-fit:cover; display:block;
+    }
+    .cas-img-overlay {
+      position:absolute; inset:0;
+      background:linear-gradient(to bottom, transparent 40%, rgba(3,38,106,.65) 100%);
+    }
+    .cas-sector-tag {
+      position:absolute; top:14px; left:14px;
+      background:var(--orange); color:#fff;
+      font-size:9px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase;
+      padding:5px 10px; border-radius:4px;
+    }
+
+    /* Card body */
+    .cas-body {
+      flex:1; padding:22px 24px 16px;
+      display:flex; flex-direction:column;
+    }
+    .cas-kpi { font-size:30px; font-weight:900; color:var(--orange); line-height:1; }
+    .cas-kpi-lbl {
+      font-size:9px; font-weight:700; letter-spacing:2px; text-transform:uppercase;
+      color:rgba(255,255,255,.35); margin-bottom:12px; margin-top:2px;
+    }
+    .cas-title {
+      font-size:15px; font-weight:700; color:#fff; line-height:1.3; margin-bottom:8px;
+    }
+    .cas-desc { font-size:13px; color:rgba(255,255,255,.5); line-height:1.65; flex:1; }
+
+    /* Footer nav */
+    .cas-footer {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:12px 20px; border-top:1px solid rgba(255,255,255,.08);
+      flex-shrink:0;
+    }
+    .cas-dots { display:flex; gap:6px; align-items:center; }
+    .cas-dot {
+      height:6px; width:6px; border-radius:3px;
+      background:rgba(255,255,255,.2); border:none; cursor:pointer; padding:0;
+      transition:background .2s, width .2s;
+    }
+    .cas-dot.active { background:var(--orange); width:18px; }
+    .cas-btns { display:flex; gap:7px; }
+    .cas-btn {
+      width:32px; height:32px; border-radius:50%;
+      background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12);
+      color:rgba(255,255,255,.7); font-size:15px; cursor:pointer;
+      display:flex; align-items:center; justify-content:center;
+      transition:background .2s, border-color .2s, color .2s; line-height:1;
+    }
+    .cas-btn:hover:not(:disabled) { background:var(--orange); border-color:var(--orange); color:#fff; }
+    .cas-btn:disabled { opacity:.25; cursor:default; }
+
+    /* all sectors grid */
+    .all-sectors{background:var(--offwhite);padding:64px 0 72px;}
+    .sectors-grid{display:grid;grid-template-columns:repeat(4,minmax(0,280px));gap:16px;justify-content:center;}
+    .s-card{background:#fff;border-radius:12px;padding:30px 20px;text-align:center;border:2px solid transparent;transition:all .3s var(--ease);cursor:pointer;}
+    .s-card:hover,.s-card.active-s{border-color:var(--cyan);transform:translateY(-6px);box-shadow:0 20px 40px rgba(3,38,106,.1);}
+    .s-ico{font-size:42px;margin-bottom:14px;}
+    .s-card h3{font-size:15px;color:var(--navy);margin-bottom:10px;}
+    .s-tags{display:flex;flex-direction:column;gap:5px;}
+    .s-tag{font-size:11px;color:var(--gray);padding:4px 0;border-top:1px solid var(--lgray);display:flex;align-items:center;gap:6px;}
+    @media(max-width:1000px){.sectors-grid{grid-template-columns:repeat(3,1fr);}}
+    @media(max-width:900px){.sec-panel.active{grid-template-columns:1fr;}.sec-visual{display:none;}}
+    @media(max-width:600px){.sectors-grid{grid-template-columns:repeat(2,1fr);}}
+  </style>
+</head>
+<body>
+<div class="mob-menu" id="mobMenu">
+  <button class="mob-close" onclick="closeMob()">✕</button>
+  <a href="index.html">Accueil</a><a href="a-propos.html">À propos</a>
+  <a href="expertises.html">Expertises</a><a href="secteurs.html" class="active">Secteurs</a>
+  <a href="transformation.html">Transformation</a><a href="publications.html">Publications</a>
+  <a href="carrieres.html">Carrières</a><a href="contact.html">Contact</a>
+  <div class="mob-lang-switch"><button class="lang-btn active">FR</button><button class="lang-btn" onclick="checkEnLang()">EN</button></div>
+</div>
+<nav class="navbar solid">
+  <div class="container"><div class="nav-inner">
+    <a href="index.html" class="nav-logo-link"><img src="logo-official.svg" class="nav-logo-img" alt="OPEO" /></a>
+    <ul class="nav-links">
+      <li><a href="a-propos.html">À propos</a></li><li><a href="expertises.html">Expertises</a></li>
+      <li class="has-drop"><a href="secteurs.html" class="active">Secteurs <svg class="drop-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></a><div class="nav-drop nav-drop-wide nav-drop-sec"><div class="mega-header"><span class="mega-label">Nos Secteurs</span></div><div class="drop-grid drop-grid-2"><a href="secteurs.html#luxe" class="drop-card"><div class="drop-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2"/></svg></div><span class="drop-card-title">Luxe</span><span class="drop-card-desc">Maroquinerie, parfumerie, horlogerie</span></a><a href="secteurs.html#process" class="drop-card"><div class="drop-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3v10l-4 5h14l-4-5V3"/><line x1="6" y1="7" x2="18" y2="7"/></svg></div><span class="drop-card-title">Industrie de Process</span><span class="drop-card-desc">Chimie, agro-alimentaire, matériaux</span></a><a href="secteurs.html#aero" class="drop-card"><div class="drop-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></div><span class="drop-card-title">Aéronautique &amp; Défense</span><span class="drop-card-desc">Constructeurs, équipementiers, MRO</span></a><a href="secteurs.html#pharma" class="drop-card"><div class="drop-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><span class="drop-card-title">Pharmaceutique – Santé</span><span class="drop-card-desc">Production, supply et conformité réglementaire</span></a></div><div class="mega-footer"><a href="secteurs.html">Tous les secteurs <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a></div></div></li><li><a href="transformation.html">Transformation</a></li>
+      <li><a href="publications.html">Publications</a></li><li><a href="carrieres.html">Carrières</a></li>
+      <li><a href="contact.html" class="cta-link">Contact</a></li>
+    </ul>
+    <div class="lang-switch"><button class="lang-btn active">FR</button><button class="lang-btn" onclick="checkEnLang()">EN</button></div>
+      <button class="hamburger" onclick="openMob()"><span></span><span></span><span></span></button>
+  </div></div>
+</nav>
+
+<section class="page-hero">
+  <div class="hero-sectors-overlay"></div>
+  <div class="page-hero-grid"></div><div class="page-hero-blob"></div>
+  <div class="container">
+    <div class="page-hero-eyebrow"><div class="page-hero-line"></div><span class="page-hero-tag">Où nous opérons</span></div>
+    <h1>Nos Secteurs</h1>
+    <p>Une expertise sectorielle profonde dans les industries les plus exigeantes, avec une connaissance intime des enjeux, contraintes et leviers de chaque secteur.</p>
+  </div>
+</section>
+
+<section class="all-sectors">
+  <div class="container">
+    <div class="head-center reveal"><span class="label">Tous les secteurs</span><h2 class="section-title">4 secteurs, une expertise partagée</h2></div>
+    <div class="sectors-grid reveal">
+      <div class="s-card active-s" onclick="switchSec(0);document.getElementById('secPanels').scrollIntoView({behavior:'smooth',block:'start'})">
+        <div class="s-ico"><svg class="ico-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12l4 6-10 13L2 9z"/><path d="M11 3L8 9l4 13 4-13-3-6"/><line x1="2" y1="9" x2="22" y2="9"/></svg></div><h3>Luxe</h3>
+        <div class="s-tags"><div class="s-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;flex-shrink:0;opacity:.55"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Horlogerie &amp; Joaillerie</div><div class="s-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;flex-shrink:0;opacity:.55"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg> Maroquinerie</div><div class="s-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;flex-shrink:0;opacity:.55"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Cosmétique</div></div>
+      </div>
+      <div class="s-card" onclick="switchSec(1);document.getElementById('secPanels').scrollIntoView({behavior:'smooth',block:'start'})">
+        <div class="s-ico"><svg class="ico-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6v9l4 8H5l4-8V3z"/><line x1="6" y1="6" x2="18" y2="6"/></svg></div><h3>Industrie de Process</h3>
+        <div class="s-tags"><div class="s-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;flex-shrink:0;opacity:.55"><path d="M9 3h6v9l4 8H5l4-8V3z"/><line x1="6" y1="6" x2="18" y2="6"/></svg> Chimie</div><div class="s-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;flex-shrink:0;opacity:.55"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg> Basic Materials &amp; Métallurgie</div><div class="s-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;flex-shrink:0;opacity:.55"><path d="M12 22V12"/><path d="M5 12c0-5 3.5-7 7-8 3.5 1 7 3 7 8"/><path d="M5 12h14"/></svg> Agroalimentaire</div></div>
+      </div>
+      <div class="s-card" onclick="switchSec(2);document.getElementById('secPanels').scrollIntoView({behavior:'smooth',block:'start'})">
+        <div class="s-ico"><svg class="ico-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></div><h3>Aéronautique &amp; Défense</h3>
+        <div class="s-tags"><div class="s-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;flex-shrink:0;opacity:.55"><rect x="2" y="7" width="20" height="15" rx="1"/><path d="M16 7V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v3"/><line x1="12" y1="12" x2="12" y2="17"/><line x1="8" y1="12" x2="8" y2="17"/><line x1="16" y1="12" x2="16" y2="17"/></svg> Sous-traitance</div><div class="s-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;flex-shrink:0;opacity:.55"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> OEM / MRO</div><div class="s-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;flex-shrink:0;opacity:.55"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Donneurs d'ordre</div></div>
+      </div>
+      <div class="s-card" onclick="switchSec(3);document.getElementById('secPanels').scrollIntoView({behavior:'smooth',block:'start'})">
+        <div class="s-ico"><svg class="ico-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div><h3>Pharmaceutique – Santé</h3>
+        <div class="s-tags"><div class="s-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;flex-shrink:0;opacity:.55"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg> Pharmaceutique</div><div class="s-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;flex-shrink:0;opacity:.55"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg> Technologie Médicale</div><div class="s-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;flex-shrink:0;opacity:.55"><circle cx="12" cy="12" r="4"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg> BioPharmaceutique</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="secteurs-intro page-pad">
+  <div class="container">
+    <div id="secPanels" class="reveal">
+
+      <!-- ══ LUXE ══ -->
+      <div class="sec-panel active">
+        <div class="sec-panel-content">
+          <span class="label">Secteur 01</span>
+          <h2>Luxe</h2>
+          <p>Nous accompagnons les maisons de luxe dans la transformation de leurs opérations industrielles, en conciliant exigences d'excellence artisanale et impératifs de performance à grande échelle.</p>
+          <div class="sec-subsectors">
+            <div class="sec-sub-item"><span class="sec-sub-ico"><svg class="ico-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>Horlogerie &amp; Joaillerie</div>
+            <div class="sec-sub-item"><span class="sec-sub-ico"><svg class="ico-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg></span>Maroquinerie</div>
+            <div class="sec-sub-item"><span class="sec-sub-ico"><svg class="ico-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>Cosmétique</div>
+          </div>
+          <p>Nos interventions combinent excellence opérationnelle et respect des savoir-faire artisanaux pour une transformation qui préserve l'âme des maisons tout en optimisant leur performance industrielle.</p>
+          <div style="display:flex; gap:16px; margin-top:24px;">
+            <a href="contact.html" class="btn btn-navy">Nous contacter →</a>
+            <a href="secteur-luxe.html" class="btn btn-cyan" style="background:rgba(29,189,242,.1); color:var(--cyan); border:1px solid var(--cyan);">Consulter la page Luxe →</a>
+          </div>
+        </div>
+
+        <!-- CAS CLIENTS CAROUSEL - LUXE -->
+        <div class="sec-visual">
+          <div class="cas-track-wrap">
+            <div class="cas-track" id="trackLuxe">
+
+              <!-- Cas 1 - remplacer src par la photo du cas client -->
+              <div class="cas-slide">
+                <div class="cas-img-wrap">
+                  <img class="cas-img" src="geste-transfo-photo.jpg" alt="Cas client Luxe - Cosmétique">
+                  <div class="cas-img-overlay"></div>
+                  <div class="cas-sector-tag">Cosmétique</div>
+                </div>
+                <div class="cas-body">
+                  <div class="cas-kpi">+35%</div>
+                  <div class="cas-kpi-lbl">Capacité de production</div>
+                  <div class="cas-title">Réorganisation d'un atelier de manufacture horlogère</div>
+                  <div class="cas-desc">Refonte complète des flux d'assemblage d'une grande maison horlogère suisse, alliant lean manufacturing et préservation des savoir-faire artisanaux.</div>
+                </div>
+              </div>
+
+              <!-- Cas 2 - remplacer src par la photo du cas client -->
+              <div class="cas-slide">
+                <div class="cas-img-wrap">
+                  <img class="cas-img" src="geste-transfo-photo.jpg" alt="Cas client Luxe 2">
+                  <div class="cas-img-overlay"></div>
+                  <div class="cas-sector-tag">Maroquinerie</div>
+                </div>
+                <div class="cas-body">
+                  <div class="cas-kpi">–18%</div>
+                  <div class="cas-kpi-lbl">Coûts matières premières</div>
+                  <div class="cas-title">Optimisation de la chaîne de valeur cuir</div>
+                  <div class="cas-desc">Déploiement d'un programme d'excellence opérationnelle dans 4 ateliers de maroquinerie, du découpage au montage final en passant par la teinture.</div>
+                </div>
+              </div>
+
+              <!-- Cas 3 - remplacer src par la photo du cas client -->
+              <div class="cas-slide">
+                <div class="cas-img-wrap">
+                  <img class="cas-img" src="geste-transfo-photo.jpg" alt="Cas client Luxe 3">
+                  <div class="cas-img-overlay"></div>
+                  <div class="cas-sector-tag">Cosmétique</div>
+                </div>
+                <div class="cas-body">
+                  <div class="cas-kpi">6 mois</div>
+                  <div class="cas-kpi-lbl">Gagnés sur le time-to-market</div>
+                  <div class="cas-title">Industrialisation d'une nouvelle ligne prestige</div>
+                  <div class="cas-desc">Pilotage de l'industrialisation d'une ligne de production cosmétique haut de gamme, de la conception des flux à la montée en cadence opérationnelle.</div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+          <div class="cas-footer">
+            <div class="cas-dots" id="dotsLuxe"></div>
+            <div class="cas-btns">
+              <button class="cas-btn cas-btn-prev" id="prevLuxe" aria-label="Précédent">&#8592;</button>
+              <button class="cas-btn cas-btn-next" id="nextLuxe" aria-label="Suivant">&#8594;</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ INDUSTRIE DE PROCESS ══ -->
+      <div class="sec-panel">
+        <div class="sec-panel-content">
+          <span class="label">Secteur 02</span>
+          <h2>Industrie de Process</h2>
+          <p>Chimie, métallurgie, agroalimentaire : nous intervenons dans des environnements complexes à contraintes réglementaires fortes, où la performance opérationnelle est un enjeu de compétitivité critique.</p>
+          <div class="sec-subsectors">
+            <div class="sec-sub-item"><span class="sec-sub-ico"><svg class="ico-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6v9l4 8H5l4-8V3z"/><line x1="6" y1="6" x2="18" y2="6"/></svg></span>Chimie</div>
+            <div class="sec-sub-item"><span class="sec-sub-ico"><svg class="ico-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>Basic Materials &amp; Métallurgie</div>
+            <div class="sec-sub-item"><span class="sec-sub-ico"><svg class="ico-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22V12"/><path d="M5 12c0-5 3.5-7 7-8 3.5 1 7 3 7 8"/><path d="M5 12h14"/></svg></span>Agroalimentaire</div>
+          </div>
+          <p>Nos équipes conjuguent expertise technique sectorielle et maîtrise des leviers opérationnels pour délivrer des résultats durables dans des environnements industriels sous forte contrainte.</p>
+          <div style="display:flex; gap:16px; margin-top:24px;">
+            <a href="contact.html" class="btn btn-navy">Nous contacter →</a>
+            <a href="secteur-process.html" class="btn btn-cyan" style="background:rgba(29,189,242,.1); color:var(--cyan); border:1px solid var(--cyan);">Consulter la page Industrie de Process →</a>
+          </div>
+        </div>
+
+        <!-- CAS CLIENTS CAROUSEL - PROCESS -->
+        <div class="sec-visual">
+          <div class="cas-track-wrap">
+            <div class="cas-track" id="trackProcess">
+
+              <div class="cas-slide">
+                <div class="cas-img-wrap">
+                  <img class="cas-img" src="geste-transfo-photo.jpg" alt="Cas client Process 1">
+                  <div class="cas-img-overlay"></div>
+                  <div class="cas-sector-tag">Chimie</div>
+                </div>
+                <div class="cas-body">
+                  <div class="cas-kpi">+2M€</div>
+                  <div class="cas-kpi-lbl">Économies en première année</div>
+                  <div class="cas-title">Activation du middle management sur grand site chimique</div>
+                  <div class="cas-desc">Programme de transformation complet : projets industriels & logistiques menés en parallèle, avec ancrage durable via l'activation du management intermédiaire.</div>
+                </div>
+              </div>
+
+              <div class="cas-slide">
+                <div class="cas-img-wrap">
+                  <img class="cas-img" src="geste-transfo-photo.jpg" alt="Cas client Process 2">
+                  <div class="cas-img-overlay"></div>
+                  <div class="cas-sector-tag">Métallurgie</div>
+                </div>
+                <div class="cas-body">
+                  <div class="cas-kpi">+15%</div>
+                  <div class="cas-kpi-lbl">Performance machines (TRS)</div>
+                  <div class="cas-title">Amélioration de la performance sur complexe métallurgique</div>
+                  <div class="cas-desc">Diagnostic approfondi et plan de progrès déployé sur 3 lignes de production, avec formation des équipes de maintenance et de production aux nouvelles pratiques.</div>
+                </div>
+              </div>
+
+              <div class="cas-slide">
+                <div class="cas-img-wrap">
+                  <img class="cas-img" src="geste-transfo-photo.jpg" alt="Cas client Process 3">
+                  <div class="cas-img-overlay"></div>
+                  <div class="cas-sector-tag">Agroalimentaire</div>
+                </div>
+                <div class="cas-body">
+                  <div class="cas-kpi">–22%</div>
+                  <div class="cas-kpi-lbl">Réduction des stocks</div>
+                  <div class="cas-title">Refonte des flux logistiques sur site de 800 personnes</div>
+                  <div class="cas-desc">Réorganisation des flux entrants et sortants avec mise en place d'un système kanban adapté aux contraintes de l'agroalimentaire (traçabilité, DLC, saisonnalité).</div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+          <div class="cas-footer">
+            <div class="cas-dots" id="dotsProcess"></div>
+            <div class="cas-btns">
+              <button class="cas-btn cas-btn-prev" id="prevProcess" aria-label="Précédent">&#8592;</button>
+              <button class="cas-btn cas-btn-next" id="nextProcess" aria-label="Suivant">&#8594;</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ AÉRONAUTIQUE & DÉFENSE ══ -->
+      <div class="sec-panel">
+        <div class="sec-panel-content">
+          <span class="label">Secteur 03</span>
+          <h2>Aéronautique &amp; Défense</h2>
+          <p>Dans un secteur sous pression des cadences et des exigences qualité, nous aidons OEM, MRO et sous-traitants à transformer leurs opérations pour répondre aux défis de montée en cadence et de compétitivité.</p>
+          <div class="sec-subsectors">
+            <div class="sec-sub-item"><span class="sec-sub-ico"><svg class="ico-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="15" rx="1"/><path d="M16 7V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v3"/><line x1="12" y1="12" x2="12" y2="17"/><line x1="8" y1="12" x2="8" y2="17"/><line x1="16" y1="12" x2="16" y2="17"/></svg></span>Sous-traitance</div>
+            <div class="sec-sub-item"><span class="sec-sub-ico"><svg class="ico-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></span>OEM / MRO</div>
+            <div class="sec-sub-item"><span class="sec-sub-ico"><svg class="ico-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>Donneurs d'ordre</div>
+          </div>
+          <p>Nos consultants maîtrisent les référentiels et contraintes propres à ce secteur (EN9100, AS9100, NADCAP) et accompagnent les transformations sans disruption des programmes en cours.</p>
+          <div style="display:flex; gap:16px; margin-top:24px;">
+            <a href="contact.html" class="btn btn-navy">Nous contacter →</a>
+            <a href="secteur-aeronautique.html" class="btn btn-cyan" style="background:rgba(29,189,242,.1); color:var(--cyan); border:1px solid var(--cyan);">Consulter la page Aéronautique & Défense →</a>
+          </div>
+        </div>
+
+        <!-- CAS CLIENTS CAROUSEL - AÉRO -->
+        <div class="sec-visual">
+          <div class="cas-track-wrap">
+            <div class="cas-track" id="trackAero">
+
+              <div class="cas-slide">
+                <div class="cas-img-wrap">
+                  <img class="cas-img" src="geste-transfo-photo.jpg" alt="Cas client Aéro 1">
+                  <div class="cas-img-overlay"></div>
+                  <div class="cas-sector-tag">Sous-traitance</div>
+                </div>
+                <div class="cas-body">
+                  <div class="cas-kpi">×2</div>
+                  <div class="cas-kpi-lbl">Cadence atteinte en 18 mois</div>
+                  <div class="cas-title">Montée en cadence d'un sous-traitant rang 1</div>
+                  <div class="cas-desc">Accompagnement d'un équipementier dans la transition vers les nouvelles cadences de production d'un grand programme aéronautique civil, sans dégradation qualité.</div>
+                </div>
+              </div>
+
+              <div class="cas-slide">
+                <div class="cas-img-wrap">
+                  <img class="cas-img" src="geste-transfo-photo.jpg" alt="Cas client Aéro 2">
+                  <div class="cas-img-overlay"></div>
+                  <div class="cas-sector-tag">MRO</div>
+                </div>
+                <div class="cas-body">
+                  <div class="cas-kpi">–30%</div>
+                  <div class="cas-kpi-lbl">Réduction du Turn Around Time</div>
+                  <div class="cas-title">Optimisation des lignes de maintenance lourde</div>
+                  <div class="cas-desc">Réduction du TAT par refonte des processus de maintenance et digitalisation des opérations, sur un centre MRO national traitant plus de 150 rotations par an.</div>
+                </div>
+              </div>
+
+              <div class="cas-slide">
+                <div class="cas-img-wrap">
+                  <img class="cas-img" src="geste-transfo-photo.jpg" alt="Cas client Aéro 3">
+                  <div class="cas-img-overlay"></div>
+                  <div class="cas-sector-tag">Défense</div>
+                </div>
+                <div class="cas-body">
+                  <div class="cas-kpi">12</div>
+                  <div class="cas-kpi-lbl">Sites fournisseurs pilotés</div>
+                  <div class="cas-title">Programme de compétitivité fournisseurs défense</div>
+                  <div class="cas-desc">Animation d'un programme d'amélioration de la performance industrielle et de la qualité chez les sous-traitants stratégiques d'un grand donneur d'ordre défense.</div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+          <div class="cas-footer">
+            <div class="cas-dots" id="dotsAero"></div>
+            <div class="cas-btns">
+              <button class="cas-btn cas-btn-prev" id="prevAero" aria-label="Précédent">&#8592;</button>
+              <button class="cas-btn cas-btn-next" id="nextAero" aria-label="Suivant">&#8594;</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ PHARMACEUTIQUE – SANTÉ ══ -->
+      <div class="sec-panel">
+        <div class="sec-panel-content">
+          <span class="label">Secteur 04</span>
+          <h2>Pharmaceutique – Santé</h2>
+          <p>Face aux enjeux de souveraineté industrielle et de conformité réglementaire, nous accompagnons les industriels de la santé dans la transformation de leurs opérations pour allier performance et conformité.</p>
+          <div class="sec-subsectors">
+            <div class="sec-sub-item"><span class="sec-sub-ico"><svg class="ico-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></span>Pharmaceutique</div>
+            <div class="sec-sub-item"><span class="sec-sub-ico"><svg class="ico-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>Technologie Médicale</div>
+            <div class="sec-sub-item"><span class="sec-sub-ico"><svg class="ico-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg></span>BioPharmaceutique</div>
+          </div>
+          <p>Tribune OPEO : <em>"Et l'intendance suivra vraiment ? Le défi industriel silencieux de la souveraineté pharmaceutique européenne."</em></p>
+          <div style="display:flex; gap:16px; margin-top:24px;">
+            <a href="contact.html" class="btn btn-navy">Nous contacter →</a>
+            <a href="secteur-pharma.html" class="btn btn-cyan" style="background:rgba(29,189,242,.1); color:var(--cyan); border:1px solid var(--cyan);">Consulter la page Pharma & Santé →</a>
+          </div>
+        </div>
+
+        <!-- CAS CLIENTS CAROUSEL - PHARMA -->
+        <div class="sec-visual">
+          <div class="cas-track-wrap">
+            <div class="cas-track" id="trackPharma">
+
+              <div class="cas-slide">
+                <div class="cas-img-wrap">
+                  <img class="cas-img" src="geste-transfo-photo.jpg" alt="Cas client Pharma 1">
+                  <div class="cas-img-overlay"></div>
+                  <div class="cas-sector-tag">Pharmaceutique</div>
+                </div>
+                <div class="cas-body">
+                  <div class="cas-kpi">100%</div>
+                  <div class="cas-kpi-lbl">Conformité GMP atteinte</div>
+                  <div class="cas-title">Transformation opérationnelle d'un laboratoire européen</div>
+                  <div class="cas-desc">Accompagnement dans la refonte des opérations de production pharmaceutique, alliant exigences réglementaires GMP et performance industrielle durable.</div>
+                </div>
+              </div>
+
+              <div class="cas-slide">
+                <div class="cas-img-wrap">
+                  <img class="cas-img" src="geste-transfo-photo.jpg" alt="Cas client Pharma 2">
+                  <div class="cas-img-overlay"></div>
+                  <div class="cas-sector-tag">Dispositifs Médicaux</div>
+                </div>
+                <div class="cas-body">
+                  <div class="cas-kpi">+28%</div>
+                  <div class="cas-kpi-lbl">Rendement lignes conditionnement</div>
+                  <div class="cas-title">Optimisation des lignes de conditionnement DM</div>
+                  <div class="cas-desc">Refonte des processus de conditionnement sur 3 lignes de production avec réduction des rebuts, amélioration de la traçabilité et conformité ISO 13485.</div>
+                </div>
+              </div>
+
+              <div class="cas-slide">
+                <div class="cas-img-wrap">
+                  <img class="cas-img" src="geste-transfo-photo.jpg" alt="Cas client Pharma 3">
+                  <div class="cas-img-overlay"></div>
+                  <div class="cas-sector-tag">BioPharmaceutique</div>
+                </div>
+                <div class="cas-body">
+                  <div class="cas-kpi">5 sites</div>
+                  <div class="cas-kpi-lbl">Déployés en 24 mois</div>
+                  <div class="cas-title">Déploiement MES multi-sites pour groupe biopharma</div>
+                  <div class="cas-desc">Pilotage du déploiement d'un système de gestion de la production sur 5 sites européens, intégrant les contraintes GxP et les spécificités locales de chaque site.</div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+          <div class="cas-footer">
+            <div class="cas-dots" id="dotsPharma"></div>
+            <div class="cas-btns">
+              <button class="cas-btn cas-btn-prev" id="prevPharma" aria-label="Précédent">&#8592;</button>
+              <button class="cas-btn cas-btn-next" id="nextPharma" aria-label="Suivant">&#8594;</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<section class="orange-band">
+  <div class="container">
+    <div class="orange-band-inner reveal">
+      <div>
+        <div class="orange-band-eyebrow">Votre secteur, notre expertise</div>
+        <h2>Vous opérez dans l'un<br>de ces secteurs ?</h2>
+        <p>Quelle que soit votre industrie, nos équipes maîtrisent les spécificités et enjeux propres à chaque marché. Discutons de votre situation.</p>
+      </div>
+      <div class="orange-band-actions">
+        <a href="https://meetings-eu1.hubspot.com/wendy-lemba" class="btn btn-white" target="_blank" rel="noopener">Prendre rendez-vous →</a>
+        <a href="http://opeo-conseil-145654140.hs-sites-eu1.com/nos-offres-page-de-dispatch" class="btn btn-ghost-white" target="_blank" rel="noopener">Voir nos offres</a>
+        <a href="https://share-eu1.hsforms.com/2jHE10lqlTX6kVxjdNJJYng2epvgc" class="btn btn-ghost-white" target="_blank" rel="noopener">Télécharger la brochure</a>
+        <a href="contact.html#question" class="btn btn-ghost-white">Poser une question</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer"><div class="container">
+  <div class="footer-grid">
+    <div class="footer-brand"><a href="index.html" class="nav-logo-link"><img src="logo-official.svg" class="nav-logo-img" alt="OPEO" /></a><p>Cabinet de Conseil européen spécialisé dans la transformation des opérations industrielles.</p><div class="footer-socials"><a href="https://www.linkedin.com/company/opeo/" target="_blank" class="soc-link">in</a><a href="https://www.youtube.com/channel/UCHxWDzGkSoEmFhDaU6nbsCg" target="_blank" class="soc-link">▶</a></div></div>
+    <div class="footer-col"><h4>Secteurs</h4><ul class="footer-nav"><li><a href="secteurs.html">Luxe</a></li><li><a href="secteurs.html">Industrie de Process</a></li><li><a href="secteurs.html">Aéronautique &amp; Défense</a></li><li><a href="secteurs.html">Pharmaceutique – Santé</a></li></ul></div>
+    <div class="footer-col"><h4>À propos</h4><ul class="footer-nav"><li><a href="a-propos.html">Mission</a></li><li><a href="expertises.html">Expertises</a></li><li><a href="transformation.html">Transformation</a></li></ul></div>
+    <div class="footer-col"><h4>Contact</h4><ul class="footer-nav"><li><a href="contact.html">Nous contacter</a></li><li><a href="carrieres.html">Carrières</a></li></ul></div>
+  </div>
+  <div class="footer-bottom"><p>@OPEO 2025</p><div class="footer-tagline">Vos Opérations sont <em>Stratégiques</em></div><p>Mentions légales</p></div>
+</div></footer>
+
+<script>
+function openMob(){document.getElementById('mobMenu').classList.add('open');}
+function closeMob(){document.getElementById('mobMenu').classList.remove('open');}
+const revObs=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting){x.target.classList.add('on');revObs.unobserve(x.target);}}),{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>revObs.observe(el));
+
+function switchSec(idx){
+  document.querySelectorAll('.sec-panel').forEach((p,i)=>p.classList.toggle('active',i===idx));
+  document.querySelectorAll('.s-card').forEach((c,i)=>c.classList.toggle('active-s',i===idx));
+}
+
+// Hash → tab index on load
+const hashMap = { luxe:0, process:1, aero:2, pharma:3 };
+(function(){
+  const h = location.hash.replace('#','');
+  if(h in hashMap) switchSec(hashMap[h]);
+})();
+
+// ── Generic case study carousel ──
+function initCasCarousel(trackId, dotsId, prevId, nextId) {
+  const track = document.getElementById(trackId);
+  const dotsWrap = document.getElementById(dotsId);
+  const prevBtn = document.getElementById(prevId);
+  const nextBtn = document.getElementById(nextId);
+  if (!track) return;
+
+  const slides = Array.from(track.querySelectorAll('.cas-slide'));
+  const total = slides.length;
+  let current = 0;
+
+  // Build dots
+  slides.forEach((_, i) => {
+    const d = document.createElement('button');
+    d.className = 'cas-dot' + (i === 0 ? ' active' : '');
+    d.setAttribute('aria-label', 'Cas ' + (i + 1));
+    d.onclick = () => go(i);
+    dotsWrap.appendChild(d);
+  });
+
+  const dots = Array.from(dotsWrap.querySelectorAll('.cas-dot'));
+
+  const DELAY = 4000;
+  let timer = null;
+
+  function go(i) {
+    current = Math.max(0, Math.min(i, total - 1));
+    track.style.transform = 'translateX(' + (-current * 100) + '%)';
+    dots.forEach((d, idx) => d.classList.toggle('active', idx === current));
+    prevBtn.disabled = current === 0;
+    nextBtn.disabled = current === total - 1;
+  }
+
+  function next() { go(current >= total - 1 ? 0 : current + 1); }
+
+  function startAuto() { timer = setInterval(next, DELAY); }
+  function stopAuto()  { clearInterval(timer); }
+
+  // Pause on hover / resume on leave
+  const container = track.closest('.sec-visual');
+  container.addEventListener('mouseenter', stopAuto, {passive:true});
+  container.addEventListener('mouseleave', startAuto, {passive:true});
+
+  prevBtn.onclick = () => { stopAuto(); go(current - 1); startAuto(); };
+  nextBtn.onclick = () => { stopAuto(); go(current + 1); startAuto(); };
+
+  // Touch swipe
+  let tx = null;
+  track.addEventListener('touchstart', e => { tx = e.touches[0].clientX; stopAuto(); }, {passive:true});
+  track.addEventListener('touchend', e => {
+    if (tx === null) return;
+    const dx = tx - e.changedTouches[0].clientX;
+    if (Math.abs(dx) > 40) { dx > 0 ? go(current + 1) : go(current - 1); }
+    tx = null;
+    startAuto();
+  }, {passive:true});
+
+  go(0);
+  startAuto();
+}
+
+initCasCarousel('trackLuxe',    'dotsLuxe',    'prevLuxe',    'nextLuxe');
+initCasCarousel('trackProcess', 'dotsProcess', 'prevProcess', 'nextProcess');
+initCasCarousel('trackAero',    'dotsAero',    'prevAero',    'nextAero');
+initCasCarousel('trackPharma',  'dotsPharma',  'prevPharma',  'nextPharma');
+initCasCarousel('trackAuto',    'dotsAuto',    'prevAuto',    'nextAuto');
+</script>
+
+<!-- LANG MODAL -->
+<div class="lang-modal-overlay" id="langModal" onclick="closeLangModal()">
+  <div class="lang-modal" onclick="event.stopPropagation()">
+    <button class="lang-modal-close" onclick="closeLangModal()" aria-label="Fermer">&#x2715;</button>
+    <div class="lang-modal-ico">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+    </div>
+    <div class="lang-modal-kicker">EN &middot; English</div>
+    <h3>Version anglaise<br>en pr&eacute;paration</h3>
+    <p>Nous travaillons &agrave; la traduction de l&rsquo;ensemble de nos contenus en anglais. Revenez bient&ocirc;t.</p>
+    <a href="#" class="btn btn-navy" onclick="closeLangModal();return false;">Revenir au site &rarr;</a>
+  </div>
+</div>
+
+<script>
+/* Lang switch hover particles */
+(function(){
+  var lastT = 0;
+  document.querySelectorAll('.lang-btn:not(.active)').forEach(function(btn){
+    btn.addEventListener('pointermove', function(e){
+      var now = Date.now();
+      if(now - lastT < 100) return;
+      lastT = now;
+      var rect = btn.getBoundingClientRect();
+      var c = document.createElement('div');
+      c.className = 'lang-circle';
+      c.style.left = (e.clientX - rect.left) + 'px';
+      c.style.top  = (e.clientY - rect.top)  + 'px';
+      btn.appendChild(c);
+      requestAnimationFrame(function(){ c.classList.add('fade-in'); });
+      setTimeout(function(){ c.classList.replace('fade-in','fade-out'); }, 900);
+      setTimeout(function(){ c.remove(); }, 2100);
+    });
+  });
+})();
+</script>
+</body></html>

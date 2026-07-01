@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Mentions Légales - OPEO</title>
+  <link rel="stylesheet" href="styles.css"/>
+  <style>
+    .ml-layout {
+      background: #fff;
+      padding: 72px 0 100px;
+    }
+    .ml-grid {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 72px;
+      align-items: start;
+    }
+
+    /* ── Sidebar TOC ── */
+    .ml-toc {
+      position: sticky;
+      top: 104px;
+    }
+    .ml-toc-label {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 20px;
+      display: block;
+    }
+    .ml-toc-list {
+      list-style: none;
+      padding: 0; margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      border-left: 2px solid #e8edf5;
+    }
+    .ml-toc-list li a {
+      display: block;
+      padding: 8px 0 8px 16px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #6b7280;
+      text-decoration: none;
+      transition: color .18s, border-color .18s;
+      border-left: 2px solid transparent;
+      margin-left: -2px;
+      line-height: 1.4;
+    }
+    .ml-toc-list li a:hover,
+    .ml-toc-list li a.active {
+      color: var(--navy);
+      border-left-color: var(--cyan);
+    }
+    .ml-toc-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      color: var(--gray);
+      font-size: 12px;
+      font-weight: 600;
+      text-decoration: none;
+      margin-bottom: 28px;
+      transition: color .18s;
+    }
+    .ml-toc-back:hover { color: var(--navy); }
+    .ml-toc-back svg { width:13px; height:13px; }
+
+    /* ── Content ── */
+    .ml-content h1 {
+      font-size: clamp(28px, 3.5vw, 42px);
+      color: var(--navy);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+      line-height: 1.1;
+    }
+    .ml-content .ml-date {
+      font-size: 13px;
+      color: var(--gray);
+      margin-bottom: 48px;
+      display: block;
+    }
+
+    /* Editor card */
+    .ml-editor-card {
+      background: linear-gradient(135deg, #f0f6ff 0%, #e8f4fe 100%);
+      border: 1px solid rgba(29,189,242,.18);
+      border-radius: 14px;
+      padding: 28px 32px;
+      margin-bottom: 52px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    .ml-editor-item {}
+    .ml-editor-item .ml-ei-label {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 8px;
+    }
+    .ml-editor-item p {
+      font-size: 14px;
+      color: var(--navy);
+      line-height: 1.7;
+      margin: 0;
+      font-weight: 500;
+    }
+    .ml-editor-item a {
+      color: var(--cyan);
+    }
+
+    /* Sections */
+    .ml-section {
+      margin-bottom: 52px;
+      scroll-margin-top: 110px;
+    }
+    .ml-section h2 {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--navy);
+      letter-spacing: .2px;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--cyan);
+      display: inline-block;
+    }
+    .ml-section p {
+      font-size: 15px;
+      line-height: 1.85;
+      color: #4b5563;
+      margin-bottom: 14px;
+    }
+    .ml-section p:last-child { margin-bottom: 0; }
+    .ml-section a {
+      color: var(--cyan);
+      text-decoration: none;
+    }
+    .ml-section a:hover {
+      text-decoration: underline;
+    }
+
+    /* Hosting box */
+    .ml-host-box {
+      background: var(--offwhite);
+      border-radius: 10px;
+      padding: 18px 22px;
+      margin-top: 14px;
+      font-size: 14px;
+      color: #4b5563;
+      line-height: 1.7;
+      border-left: 3px solid var(--navy);
+    }
+    .ml-host-box strong { color: var(--navy); }
+
+    /* Bottom CTA */
+    .ml-cta {
+      margin-top: 64px;
+      padding-top: 40px;
+      border-top: 1px solid #e8edf5;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .ml-cta p {
+      font-size: 14px;
+      color: var(--gray);
+      margin: 0;
+    }
+
+    @media (max-width: 860px) {
+      .ml-grid { grid-template-columns: 1fr; }
+      .ml-toc { position: static; display: none; }
+      .ml-editor-card { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Mobile menu -->
+<div class="mob-menu" id="mobMenu">
+  <button class="mob-close" onclick="closeMob()">✕</button>
+  <a href="index.html">Accueil</a><a href="a-propos.html">À propos</a>
+  <a href="expertises.html">Expertises</a><a href="secteurs.html">Secteurs</a>
+  <a href="transformation.html">Transformation</a><a href="publications.html">Publications</a>
+  <a href="carrieres.html">Carrières</a><a href="contact.html">Contact</a>
+  <div class="mob-lang-switch"><button class="lang-btn active">FR</button><button class="lang-btn" onclick="checkEnLang()">EN</button></div>
+</div>
+
+<!-- Navbar -->
+<nav class="navbar solid">
+  <div class="container"><div class="nav-inner">
+    <a href="index.html" class="nav-logo-link"><img src="logo-official.svg" class="nav-logo-img" alt="OPEO"/></a>
+    <ul class="nav-links">
+      <li><a href="a-propos.html">À propos</a></li>
+      <li><a href="expertises.html">Expertises</a></li>
+      <li><a href="transformation.html">Transformation</a></li>
+      <li><a href="publications.html">Publications</a></li>
+      <li><a href="carrieres.html">Carrières</a></li>
+      <li><a href="contact.html" class="cta-link">Contact</a></li>
+    </ul>
+    <div class="lang-switch"><button class="lang-btn active">FR</button><button class="lang-btn" onclick="checkEnLang()">EN</button></div>
+      <button class="hamburger" onclick="openMob()"><span></span><span></span><span></span></button>
+  </div></div>
+</nav>
+
+<!-- Hero -->
+<section class="page-hero" style="padding:60px 0 50px;">
+  <div class="page-hero-grid"></div><div class="page-hero-blob"></div>
+  <div class="container">
+    <div class="page-hero-eyebrow"><div class="page-hero-line"></div><span class="page-hero-tag">Informations légales</span></div>
+    <h1>Mentions légales</h1>
+    <p>Conformément aux dispositions de la loi n° 2004-575 du 21 juin 2004 pour la confiance en l'économie numérique.</p>
+  </div>
+</section>
+
+<!-- Content -->
+<section class="ml-layout">
+  <div class="container">
+    <div class="ml-grid">
+
+      <!-- Sidebar -->
+      <aside class="ml-toc">
+        <a href="index.html" class="ml-toc-back">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+          Retour à l'accueil
+        </a>
+        <span class="ml-toc-label">Sommaire</span>
+        <ul class="ml-toc-list">
+          <li><a href="#editeur">Éditeur du site</a></li>
+          <li><a href="#cgu">Conditions générales d'utilisation</a></li>
+          <li><a href="#contenu">Contenu du site</a></li>
+          <li><a href="#technique">Informations techniques</a></li>
+          <li><a href="#donnees">Informatique et libertés</a></li>
+          <li><a href="#confidentialite">Politique de confidentialité</a></li>
+          <li><a href="#propriete">Propriété intellectuelle</a></li>
+          <li><a href="#liens">Liens hypertextes</a></li>
+          <li><a href="#droit">Droit applicable</a></li>
+        </ul>
+      </aside>
+
+      <!-- Main content -->
+      <div class="ml-content">
+        <h1>Mentions légales</h1>
+        <span class="ml-date">Dernière mise à jour : mai 2026</span>
+
+        <!-- Editor card -->
+        <div class="ml-editor-card">
+          <div class="ml-editor-item">
+            <div class="ml-ei-label">Éditeur</div>
+            <p>
+              <strong>SAS OPEO</strong><br>
+              23 Boulevard Poissonnière<br>
+              75002 Paris, France<br>
+              Tél : <a href="tel:+33954673850">+33 (0)9 54 67 38 50</a><br>
+              RCS Paris : 751 175 910
+            </p>
+          </div>
+          <div class="ml-editor-item">
+            <div class="ml-ei-label">Hébergeur</div>
+            <p>
+              <strong>Hostinger International Ltd.</strong><br>
+              Europos 32-4, 46326<br>
+              Kaunas, Lithuania<br>
+              <a href="mailto:support@hostinger.com">support@hostinger.com</a>
+            </p>
+          </div>
+          <div class="ml-editor-item">
+            <div class="ml-ei-label">Directeur de publication</div>
+            <p>
+              Monsieur <strong>David Machenaud</strong><br>
+              Président de la SAS OPEO
+            </p>
+          </div>
+          <div class="ml-editor-item">
+            <div class="ml-ei-label">Conception & développement</div>
+            <p>
+              Co-conçu par <strong>Mots-Clés</strong><br>
+              et <strong>La Fabrique VingtCinq</strong><br>
+              pour l'intégration et le développement
+            </p>
+          </div>
+        </div>
+
+        <!-- Section 1 -->
+        <div class="ml-section" id="editeur">
+          <h2>Éditeur du site</h2>
+          <p>Ce site est édité par la SAS OPEO, située au 23 Boulevard Poissonnière, 75002 Paris, France, immatriculée sous le numéro 751 175 910 au RCS Paris.</p>
+          <p>Le directeur de publication du site <a href="https://www.opeo.consulting" target="_blank">www.opeo.consulting</a> est Monsieur David Machenaud, en sa qualité de Président de la SAS OPEO.</p>
+          <p>Le site <a href="https://www.opeo.consulting" target="_blank">www.opeo.consulting</a> a été co-conçu par la société Mots-Clés et La Fabrique VingtCinq pour l'intégration et le développement.</p>
+        </div>
+
+        <!-- Section 2 -->
+        <div class="ml-section" id="cgu">
+          <h2>Conditions générales d'utilisation</h2>
+          <p>L'utilisateur reconnaît avoir pris connaissance des présentes conditions générales d'utilisation et s'engage à les respecter. OPEO se réserve le droit de modifier la présente notice à tout moment. L'utilisateur s'engage donc à la consulter régulièrement.</p>
+          <p>Dans l'hypothèse où vous accéderiez au site <a href="https://www.opeo.consulting" target="_blank">www.opeo.consulting</a> à partir d'un autre État que la France, vous vous engagez à vous assurer également du respect de la législation localement applicable.</p>
+        </div>
+
+        <!-- Section 3 -->
+        <div class="ml-section" id="contenu">
+          <h2>Contenu du site</h2>
+          <p>Les informations fournies sur <a href="https://www.opeo.consulting" target="_blank">www.opeo.consulting</a> sont à titre informatif et indicatif. OPEO ne saurait garantir l'exactitude, la complétude, l'actualité des informations diffusées sur ce site. OPEO ne saurait dispenser l'utilisateur d'une analyse complémentaire et adaptée ni être tenu responsable des erreurs ou omissions, d'une absence de disponibilité des informations et des services.</p>
+          <p>En conséquence, l'utilisateur reconnaît utiliser ces informations sous sa responsabilité exclusive. OPEO ne saurait être tenu pour responsable des dommages directs ou indirects qui pourraient résulter de l'accès ou de l'utilisation de <a href="https://www.opeo.consulting" target="_blank">www.opeo.consulting</a>, y compris l'inaccessibilité, les pertes de données, et/ou la présence de virus sur le site, sans que cette liste soit exhaustive.</p>
+        </div>
+
+        <!-- Section 4 -->
+        <div class="ml-section" id="technique">
+          <h2>Informations techniques générales</h2>
+          <p>En tant qu'utilisateur de <a href="https://www.opeo.consulting" target="_blank">www.opeo.consulting</a>, vous reconnaissez disposer de la compétence et des moyens nécessaires pour accéder et utiliser ce site et avoir vérifié que votre configuration informatique ne contient aucun virus et qu'elle est en parfait état de fonctionnement.</p>
+          <p>Vous reconnaissez également avoir été informé que <a href="https://www.opeo.consulting" target="_blank">www.opeo.consulting</a> est accessible 24h/24 et 7 jours/7, à l'exception des cas de force majeure, difficultés informatiques, techniques ou liées aux réseaux de télécommunications. Pour des raisons de maintenance, OPEO pourra interrompre l'accès à son site sans en avertir préalablement les utilisateurs.</p>
+        </div>
+
+        <!-- Section 5 -->
+        <div class="ml-section" id="donnees">
+          <h2>Informatique et libertés</h2>
+          <p>L'utilisateur est informé que ses données personnelles qui pourraient être collectées dans le cadre de <a href="https://www.opeo.consulting" target="_blank">www.opeo.consulting</a> font l'objet d'un traitement automatisé conformément à la loi Informatique et libertés n° 78-17 du 6 janvier 1978 modifiée relative à l'informatique, aux fichiers et aux libertés.</p>
+          <p>Conformément à la loi susvisée, l'utilisateur dispose d'un droit d'accès, de rectification, de suppression et d'opposition portant sur les données le concernant. Ce droit peut être exercé soit directement sur le site, par courriel adressé au webmestre via le formulaire de contact, ou en écrivant à l'adresse indiquée ci-dessus.</p>
+          <p>L'utilisateur est tenu de respecter les dispositions de la loi susvisée, dont la violation est passible de sanctions pénales. Il doit notamment s'abstenir, s'agissant des informations nominatives auxquelles il accède, de toute collecte, de toute utilisation détournée, et d'une manière générale, de tout acte susceptible de porter atteinte à la vie privée ou à la réputation des personnes.</p>
+        </div>
+
+        <!-- Section 6 -->
+        <div class="ml-section" id="confidentialite">
+          <h2>Politique de confidentialité & cookies</h2>
+          <p>Lors de vos visites, vous êtes informé qu'un témoin de connexion peut s'installer automatiquement sur votre logiciel de navigation. Il s'agit d'un bloc de données qui n'est pas utilisé à des fins d'identification, mais qui sert à enregistrer des informations relatives à votre navigation sur le site. Il permet des analyses de fréquentation et mesures d'audience afin d'améliorer la qualité du site.</p>
+          <p>Le paramétrage de votre logiciel de navigation vous permet d'être informé de la présence du témoin de connexion et, éventuellement, de le refuser.</p>
+        </div>
+
+        <!-- Section 7 -->
+        <div class="ml-section" id="propriete">
+          <h2>Propriété intellectuelle</h2>
+          <p>Les marques et les logos d'OPEO sont des marques déposées. Toute reproduction ou représentation totale ou partielle, seule ou intégrée à d'autres éléments, sans l'autorisation écrite, expresse et préalable d'OPEO, en est strictement interdite.</p>
+          <p>La structure générale, les logiciels, textes, images, vidéos, sons, savoir-faire, animations, et plus généralement toutes les informations et contenus figurant sur <a href="https://www.opeo.consulting" target="_blank">www.opeo.consulting</a> sont la propriété d'OPEO ou font l'objet d'un droit d'utilisation ou d'exploitation. Ces éléments sont soumis à la législation protégeant le droit d'auteur.</p>
+          <p>Toute représentation, modification, reproduction, dénaturation, totale ou partielle, de tout ou partie du site ou de son contenu, par quelque procédé que ce soit, constituerait une contrefaçon sanctionnée par les articles L 335-2 et suivants du Code de la Propriété Intellectuelle.</p>
+          <p>Les bases de données figurant sur <a href="https://www.opeo.consulting" target="_blank">www.opeo.consulting</a> sont protégées par les dispositions de la loi du 1er juillet 1998 transposant dans le Code de la Propriété Intellectuelle la Directive Européenne du 11 mars 1996 relative à la protection juridique des bases de données. OPEO interdit expressément toute réutilisation, reproduction ou extraction non autorisée de ces bases de données.</p>
+          <p>Dans l'hypothèse où vous souhaiteriez utiliser un des contenus du site, vous devez obtenir l'autorisation écrite, expresse et préalable d'OPEO en écrivant à l'adresse mentionnée ci-dessus.</p>
+        </div>
+
+        <!-- Section 8 -->
+        <div class="ml-section" id="liens">
+          <h2>Liens hypertextes</h2>
+          <p>Les liens mis en place depuis <a href="https://www.opeo.consulting" target="_blank">www.opeo.consulting</a> vers des sites extérieurs ne sauraient engager la responsabilité d'OPEO, notamment au regard du contenu de ces sites. En acceptant d'utiliser un lien hypertexte pour accéder à un site extérieur, vous acceptez de prendre les risques et de subir un éventuel préjudice direct ou indirect.</p>
+          <p>OPEO n'est pas responsable des liens hypertextes susceptibles de pointer sur son site et interdit la mise en place de tels liens sans son accord préalable écrit.</p>
+        </div>
+
+        <!-- Section 9 -->
+        <div class="ml-section" id="droit">
+          <h2>Droit applicable</h2>
+          <p>Le droit applicable à <a href="https://www.opeo.consulting" target="_blank">www.opeo.consulting</a> est le droit français. Les contenus et services en ligne sont proposés en français et en anglais.</p>
+        </div>
+
+        <!-- Bottom CTA -->
+        <div class="ml-cta">
+          <p>Une question ? Contactez-nous directement.</p>
+          <a href="contact.html" class="btn btn-navy">Nous contacter →</a>
+        </div>
+
+      </div><!-- /ml-content -->
+    </div><!-- /ml-grid -->
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer"><div class="container">
+  <div class="footer-grid">
+    <div class="footer-brand"><a href="index.html" class="nav-logo-link"><img src="logo-official.svg" class="nav-logo-img" alt="OPEO"/></a><p>Cabinet de Conseil européen spécialisé dans la transformation des opérations industrielles.</p><div class="footer-socials"><a href="https://www.linkedin.com/company/opeo/" target="_blank" class="soc-link">in</a><a href="https://www.youtube.com/channel/UCHxWDzGkSoEmFhDaU6nbsCg" target="_blank" class="soc-link">▶</a></div></div>
+    <div class="footer-col"><h4>Navigation</h4><ul class="footer-nav"><li><a href="index.html">Accueil</a></li><li><a href="expertises.html">Expertises</a></li><li><a href="secteurs.html">Secteurs</a></li><li><a href="transformation.html">Transformation</a></li></ul></div>
+    <div class="footer-col"><h4>OPEO</h4><ul class="footer-nav"><li><a href="a-propos.html">À propos</a></li><li><a href="carrieres.html">Carrières</a></li><li><a href="publications.html">Publications</a></li></ul></div>
+    <div class="footer-col"><h4>Légal</h4><ul class="footer-nav"><li><a href="mentions-legales.html">Mentions légales</a></li><li><a href="https://opeo.consulting" target="_blank">CGV</a></li><li><a href="https://opeo.consulting" target="_blank">Égalité H/F</a></li></ul></div>
+  </div>
+  <div class="footer-bottom"><p>@OPEO 2026 · Conçu et développé en France</p><div class="footer-tagline">Vos Opérations sont <em>Stratégiques</em></div></div>
+</div></footer>
+
+<script>
+function openMob(){document.getElementById('mobMenu').classList.add('open');}
+function closeMob(){document.getElementById('mobMenu').classList.remove('open');}
+
+/* TOC active state on scroll */
+const sections = document.querySelectorAll('.ml-section');
+const tocLinks = document.querySelectorAll('.ml-toc-list a');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      tocLinks.forEach(l => l.classList.remove('active'));
+      const link = document.querySelector(`.ml-toc-list a[href="#${entry.target.id}"]`);
+      if (link) link.classList.add('active');
+    }
+  });
+}, { rootMargin: '-20% 0px -70% 0px' });
+sections.forEach(s => observer.observe(s));
+</script>
+
+<!-- LANG MODAL -->
+<div class="lang-modal-overlay" id="langModal" onclick="closeLangModal()">
+  <div class="lang-modal" onclick="event.stopPropagation()">
+    <button class="lang-modal-close" onclick="closeLangModal()" aria-label="Fermer">&#x2715;</button>
+    <div class="lang-modal-ico">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+    </div>
+    <div class="lang-modal-kicker">EN &middot; English</div>
+    <h3>Version anglaise<br>en pr&eacute;paration</h3>
+    <p>Nous travaillons &agrave; la traduction de l&rsquo;ensemble de nos contenus en anglais. Revenez bient&ocirc;t.</p>
+    <a href="#" class="btn btn-navy" onclick="closeLangModal();return false;">Revenir au site &rarr;</a>
+  </div>
+</div>
+
+<script>
+/* Lang switch hover particles */
+(function(){
+  var lastT = 0;
+  document.querySelectorAll('.lang-btn:not(.active)').forEach(function(btn){
+    btn.addEventListener('pointermove', function(e){
+      var now = Date.now();
+      if(now - lastT < 100) return;
+      lastT = now;
+      var rect = btn.getBoundingClientRect();
+      var c = document.createElement('div');
+      c.className = 'lang-circle';
+      c.style.left = (e.clientX - rect.left) + 'px';
+      c.style.top  = (e.clientY - rect.top)  + 'px';
+      btn.appendChild(c);
+      requestAnimationFrame(function(){ c.classList.add('fade-in'); });
+      setTimeout(function(){ c.classList.replace('fade-in','fade-out'); }, 900);
+      setTimeout(function(){ c.remove(); }, 2100);
+    });
+  });
+})();
+</script>
+</body>
+</html>

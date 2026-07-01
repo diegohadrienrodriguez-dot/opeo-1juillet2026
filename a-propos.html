@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>À propos - OPEO</title>
+  <link rel="stylesheet" href="styles.css"/>
+  <style>
+    /* ── Hero background photo ── */
+    .page-hero {
+      background:
+        linear-gradient(135deg, rgba(3,38,106,.78) 0%, rgba(3,38,106,.55) 60%, rgba(3,38,106,.40) 100%),
+        url("hero-apropos.jpg") center center / cover no-repeat;
+    }
+    .page-hero-blob { display:none; }
+
+    /* ══════════════════════════════════════
+       MISSION - asymétrique
+    ══════════════════════════════════════ */
+    .ap-mission {
+      background:#fff;  /* BLANC */
+      padding:120px 0 0;
+    }
+    .ap-mission-grid {
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:80px;
+      align-items:start;
+    }
+    .ap-mission-text .lbl {
+      font-size:10px;font-weight:700;letter-spacing:4px;text-transform:uppercase;
+      color:var(--orange);margin-bottom:24px;display:flex;align-items:center;gap:12px;
+    }
+    .ap-mission-text .lbl::after {
+      content:'';display:block;height:1px;width:40px;background:rgba(29,189,242,.4);
+    }
+    .ap-mission-text h2 {
+      font-size:clamp(28px,3.5vw,46px);font-weight:900;color:var(--navy);
+      line-height:1.1;letter-spacing:-.5px;margin-bottom:32px;
+    }
+    .ap-manifesto {
+      font-size:16px;line-height:1.9;color:var(--gray);margin-bottom:20px;
+    }
+    .ap-manifesto strong { color:var(--navy); }
+    .ap-pull {
+      border-left:3px solid var(--orange);padding:18px 24px;
+      margin:32px 0;background:#f5f7fb;border-radius:0 8px 8px 0;
+    }
+    .ap-pull p {
+      font-size:15px;font-weight:700;font-style:italic;color:var(--navy);
+      line-height:1.6;margin:0;
+    }
+
+    /* PHOTO + STATS */
+    .ap-mission-visual {
+      position:relative;
+    }
+    .ap-photo-wrap {
+      position:relative;border-radius:20px;overflow:hidden;
+      background:url('mission-bg.jpg') center/cover no-repeat;
+      min-height:540px;
+    }
+    .ap-photo-overlay {
+      position:absolute;inset:0;
+      background:linear-gradient(160deg,rgba(3,38,106,.75) 0%,rgba(3,38,106,.50) 60%,transparent 100%);
+    }
+    .ap-photo-content {
+      position:absolute;inset:0;padding:48px;display:flex;flex-direction:column;justify-content:flex-end;
+    }
+    .ap-photo-tag {
+      font-size:9px;font-weight:700;letter-spacing:3.5px;text-transform:uppercase;
+      color:rgba(255,255,255,.4);margin-bottom:28px;display:block;
+    }
+    .ap-stats-row {
+      display:grid;grid-template-columns:1fr 1fr;gap:24px;
+    }
+    .ap-stat { }
+    .ap-stat-num {
+      font-size:clamp(36px,4vw,52px);font-weight:900;color:#fff;
+      line-height:1;letter-spacing:-1px;
+    }
+    .ap-stat-num em { font-style:normal;color:var(--orange);font-size:.6em; }
+    .ap-stat-lbl {
+      font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+      color:rgba(255,255,255,.4);margin-top:6px;
+    }
+    /* floating card */
+    .ap-float-card {
+      position:absolute;top:40px;right:20px;
+      background:#fff;border-radius:14px;
+      padding:20px 24px;
+      box-shadow:0 20px 60px rgba(3,38,106,.15);
+      min-width:240px;
+    }
+    .ap-float-card-tag {
+      font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;
+      color:var(--gray);margin-bottom:10px;
+    }
+    .ap-float-card-num {
+      font-size:32px;font-weight:900;color:var(--navy);line-height:1;
+      word-break:break-word;overflow-wrap:break-word;
+    }
+    .ap-float-card-num em { font-style:normal;color:var(--orange); }
+    .ap-float-card-lbl {
+      font-size:11px;color:var(--gray);margin-top:4px;
+    }
+    .ap-since {
+      margin-top:120px;padding:40px 0;
+      border-top:1px solid #edf0f5;
+      display:flex;align-items:center;gap:40px;
+    }
+    .ap-since-year {
+      font-size:clamp(60px,8vw,100px);font-weight:900;color:#edf0f5;
+      line-height:1;letter-spacing:-3px;flex-shrink:0;
+    }
+    .ap-since-text {
+      font-size:14px;color:var(--gray);line-height:1.8;max-width:36ch;
+    }
+    .ap-since-text strong { color:var(--navy); }
+
+    /* ══════════════════════════════════════
+       CHIFFRES - bande pleine largeur
+    ══════════════════════════════════════ */
+    .ap-numbers {
+      background:var(--navy);padding:80px 0;
+      position:relative;overflow:hidden;
+    }
+    .ap-numbers::before {
+      content:'';position:absolute;inset:0;
+      background:radial-gradient(ellipse 80% 120% at 50% -20%,rgba(29,189,242,.07) 0%,transparent 60%);
+    }
+    .ap-numbers-grid {
+      position:relative;z-index:1;
+      display:grid;grid-template-columns:repeat(4,1fr);
+      gap:0;
+    }
+    .ap-num-item {
+      padding:0 48px;
+      border-right:1px solid rgba(255,255,255,.08);
+    }
+    .ap-num-item:first-child { padding-left:0; }
+    .ap-num-item:last-child { border-right:none; }
+    .ap-num-val {
+      font-size:clamp(40px,5vw,68px);font-weight:900;color:#fff;
+      line-height:1;letter-spacing:-2px;margin-bottom:8px;
+    }
+    .ap-num-val em { font-style:normal;color:var(--orange); }
+    .ap-num-lbl {
+      font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;
+      color:rgba(255,255,255,.3);
+    }
+
+    /* ══════════════════════════════════════
+       CONVICTION - section éditoriale  (BLEU NUIT)
+    ══════════════════════════════════════ */
+    .ap-conviction {
+      background:var(--navy);padding:120px 0;position:relative;overflow:hidden;
+    }
+    .ap-conviction::before {
+      content:'';position:absolute;inset:0;
+      background:radial-gradient(ellipse 70% 120% at 10% 50%,rgba(29,189,242,.07) 0%,transparent 60%);
+    }
+    .ap-conv-inner {
+      position:relative;z-index:1;
+      display:grid;grid-template-columns:1fr 1.6fr;gap:100px;align-items:center;
+    }
+    .ap-conv-left .lbl { margin-bottom:20px;display:block;color:rgba(255,255,255,.4); }
+    .ap-conv-left .lbl::before { background:rgba(255,255,255,.2); }
+    .ap-conv-left h2 {
+      font-size:clamp(24px,2.5vw,32px);font-weight:900;color:#fff;
+      line-height:1.2;letter-spacing:-.3px;margin-bottom:0;
+    }
+    .ap-conv-right blockquote {
+      margin:0;padding:0;
+      font-size:clamp(22px,2.8vw,38px);font-weight:800;
+      color:#fff;line-height:1.25;letter-spacing:-.5px;
+    }
+    .ap-conv-right blockquote em {
+      font-style:normal;color:var(--orange);
+    }
+    .ap-conv-right p {
+      margin-top:32px;font-size:15px;color:rgba(255,255,255,.5);line-height:1.85;max-width:54ch;
+    }
+    .ap-conv-mark {
+      font-size:160px;font-weight:900;color:rgba(255,255,255,.06);line-height:.8;
+      margin-bottom:-24px;display:block;letter-spacing:-6px;
+    }
+
+    /* ══════════════════════════════════════
+       VALEURS - lignes animées  (BLEU CLAIR)
+    ══════════════════════════════════════ */
+    .ap-valeurs { background:#e6f4fb;padding:120px 0; }
+    .ap-val-head {
+      display:grid;grid-template-columns:1fr 1fr;gap:80px;
+      align-items:end;margin-bottom:72px;
+    }
+    .ap-val-head h2 {
+      font-size:clamp(26px,3.5vw,44px);font-weight:900;color:var(--navy);
+      line-height:1.1;letter-spacing:-.4px;margin-top:12px;
+    }
+    .ap-val-head p {
+      font-size:15px;color:var(--gray);line-height:1.85;max-width:50ch;
+    }
+    .ap-val-list { border-top:1px solid rgba(3,38,106,.1); }
+    .ap-val-row {
+      display:grid;
+      grid-template-columns:64px 1fr 1fr;
+      gap:0 52px;
+      align-items:center;
+      padding:28px 0;
+      border-bottom:1px solid rgba(3,38,106,.1);
+      position:relative;
+      transition:padding-left .28s cubic-bezier(.4,0,.2,1);
+      overflow:hidden;
+    }
+    .ap-val-row::before {
+      content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
+      background:var(--cyan);transform:scaleY(0);transform-origin:center;
+      transition:transform .28s cubic-bezier(.4,0,.2,1);
+    }
+    .ap-val-row:hover::before { transform:scaleY(1); }
+    .ap-val-row:hover { padding-left:16px; }
+    .ap-val-num {
+      font-size:11px;font-weight:700;letter-spacing:3px;
+      text-transform:uppercase;color:var(--orange);
+    }
+    .ap-val-title {
+      font-size:clamp(15px,1.4vw,18px);font-weight:800;color:var(--navy);
+      line-height:1.2;
+    }
+    .ap-val-desc {
+      font-size:14px;color:var(--gray);line-height:1.75;
+    }
+
+    /* ══════════════════════════════════════
+       TÉMOIGNAGES - slider
+    ══════════════════════════════════════ */
+    .ap-testi { background:var(--navy);padding:100px 0;position:relative;overflow:hidden; }
+    .ap-testi::before {
+      content:'';position:absolute;inset:0;
+      background-image:linear-gradient(rgba(29,189,242,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(29,189,242,.04) 1px,transparent 1px);
+      background-size:48px 48px;z-index:0;
+    }
+    .ap-testi-header { position:relative;z-index:1;margin-bottom:48px; }
+    .ap-testi-header .lbl { color:rgba(255,255,255,.4);margin-bottom:12px;display:block; }
+    .ap-testi-header h2 { font-size:clamp(24px,3vw,38px);font-weight:900;color:#fff;line-height:1.15;letter-spacing:-.3px; }
+    .ap-testi-grid {
+      position:relative;z-index:1;
+      display:grid;
+      grid-template-columns:1fr 1fr 1fr;
+      grid-template-rows:auto auto;
+      gap:14px;
+    }
+    .ap-tq {
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(29,189,242,.1);
+      border-radius:16px;padding:28px 30px;
+      display:flex;flex-direction:column;gap:18px;
+      transition:background .2s,border-color .2s;
+    }
+    .ap-tq:hover { background:rgba(255,255,255,.08);border-color:rgba(29,189,242,.25); }
+    .ap-tq.featured { grid-column:1/3;border-left:3px solid var(--orange); }
+    .ap-tq-quote { font-size:34px;line-height:.8;color:var(--orange);font-weight:900;opacity:.55; }
+    .ap-tq-text { font-size:14.5px;line-height:1.75;color:rgba(255,255,255,.8);flex:1; }
+    .ap-tq.featured .ap-tq-text { font-size:16px; }
+    .ap-tq-author { display:flex;align-items:center;gap:12px; }
+    .ap-tq-ava {
+      width:38px;height:38px;border-radius:50%;flex-shrink:0;
+      background:linear-gradient(135deg,rgba(29,189,242,.3),rgba(3,38,106,.9));
+      border:1.5px solid rgba(29,189,242,.25);
+      display:flex;align-items:center;justify-content:center;
+      color:#fff;font-weight:800;font-size:11px;letter-spacing:.4px;
+    }
+    .ap-tq-name { font-size:13px;font-weight:700;color:#fff; }
+    .ap-tq-role { font-size:11px;color:rgba(255,255,255,.35);margin-top:2px; }
+    @media(max-width:960px){
+      .ap-testi-grid { grid-template-columns:1fr 1fr; }
+      .ap-tq.featured { grid-column:1/-1; }
+    }
+    @media(max-width:580px){
+      .ap-testi-grid { grid-template-columns:1fr; }
+      .ap-tq.featured { grid-column:1; }
+    }
+
+    /* ══════════════════════════════════════
+       ÉQUIPE  (BLANC)
+    ══════════════════════════════════════ */
+    .ap-equipe { background:#fff;padding:120px 0 60px; }
+    .ap-team-head {
+      display:grid;grid-template-columns:1fr auto;gap:40px;
+      align-items:end;margin-bottom:64px;
+    }
+    .ap-team-head h2 {
+      font-size:clamp(26px,3vw,40px);font-weight:900;color:var(--navy);
+      line-height:1.1;letter-spacing:-.4px;margin-top:12px;
+    }
+    .ap-team-filter { display:flex;gap:6px;flex-wrap:wrap; }
+    .ap-tf-btn {
+      padding:8px 18px;border-radius:30px;font-size:11px;font-weight:700;
+      border:1.5px solid #d8e2ed;background:transparent;color:var(--gray);
+      transition:all .22s;cursor:pointer;letter-spacing:.3px;
+    }
+    .ap-tf-btn:hover:not(.active) { border-color:var(--navy);color:var(--navy); }
+    .ap-tf-btn.active { background:var(--navy);border-color:var(--navy);color:#fff; }
+
+    .ap-team-grid {
+      display:grid;grid-template-columns:repeat(4,1fr);gap:16px;
+    }
+    .ap-team-card {
+      background:#f5f9fc;border-radius:14px;padding:28px 20px 24px;
+      border:1px solid #ddedf5;
+      transition:all .3s var(--ease);
+      position:relative;overflow:hidden;
+    }
+    .ap-team-card::after {
+      content:'';position:absolute;bottom:0;left:0;right:0;height:3px;
+      background:var(--cyan);transform:scaleX(0);transform-origin:left;
+      transition:transform .3s var(--ease);
+    }
+    .ap-team-card:hover { transform:translateY(-5px);box-shadow:0 20px 44px rgba(3,38,106,.09); }
+    .ap-team-card:hover::after { transform:scaleX(1); }
+    .ap-team-ava {
+      width:56px;height:56px;border-radius:50%;
+      background:linear-gradient(135deg,var(--navy) 0%,#1a3d80 100%);
+      display:flex;align-items:center;justify-content:center;
+      color:#fff;font-size:18px;font-weight:800;margin-bottom:16px;
+    }
+    .ap-team-name { font-size:14px;font-weight:800;color:var(--navy);margin-bottom:3px; }
+    .ap-team-role { font-size:12px;color:var(--gray);margin-bottom:12px;line-height:1.4; }
+    .ap-team-badge {
+      display:inline-block;background:#f0f4fa;color:var(--navy);
+      font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+      padding:4px 10px;border-radius:20px;
+    }
+
+    /* ══════════════════════════════════════
+       CTA FINAL
+    ══════════════════════════════════════ */
+    .ap-cta { background:var(--orange);padding:100px 0;position:relative;overflow:hidden; }
+    .ap-cta::before {
+      content:'';position:absolute;inset:0;
+      background:radial-gradient(ellipse at 85% 50%,rgba(255,255,255,.10) 0%,transparent 60%),radial-gradient(ellipse at 10% 80%,rgba(0,0,0,.08) 0%,transparent 50%);
+    }
+    .ap-cta-inner {
+      position:relative;z-index:1;
+      display:grid;grid-template-columns:1fr auto;gap:48px;align-items:center;
+    }
+    .ap-cta-tag { font-size:10px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,.65);margin-bottom:14px; }
+    .ap-cta h2 { font-size:clamp(26px,3.5vw,44px);color:#fff;line-height:1.15;letter-spacing:-.5px;margin-bottom:12px; }
+    .ap-cta p { color:rgba(255,255,255,.82);font-size:15px;line-height:1.8;max-width:46ch; }
+    .ap-cta-btns { display:flex;flex-direction:column;gap:12px;flex-shrink:0; }
+
+    /* ══════════════════════════════════════
+       STAGGER REVEALS
+    ══════════════════════════════════════ */
+    .reveal-stagger > * {
+      opacity:0;transform:translateY(28px);
+      transition:opacity .65s var(--ease),transform .65s var(--ease);
+    }
+    .reveal-stagger.on > *:nth-child(1){opacity:1;transform:none;transition-delay:.0s}
+    .reveal-stagger.on > *:nth-child(2){opacity:1;transform:none;transition-delay:.12s}
+    .reveal-stagger.on > *:nth-child(3){opacity:1;transform:none;transition-delay:.24s}
+    .reveal-stagger.on > *:nth-child(4){opacity:1;transform:none;transition-delay:.36s}
+    .reveal-stagger.on > *:nth-child(5){opacity:1;transform:none;transition-delay:.48s}
+    .reveal-stagger.on > *:nth-child(6){opacity:1;transform:none;transition-delay:.60s}
+    .reveal-stagger.on > *:nth-child(7){opacity:1;transform:none;transition-delay:.72s}
+    .reveal-stagger.on > *:nth-child(8){opacity:1;transform:none;transition-delay:.84s}
+    .reveal-stagger.on > *:nth-child(9){opacity:1;transform:none;transition-delay:.96s}
+    .reveal-stagger.on > *:nth-child(10){opacity:1;transform:none;transition-delay:1.08s}
+    .reveal-stagger.on > *:nth-child(11){opacity:1;transform:none;transition-delay:1.20s}
+    .reveal-stagger.on > *:nth-child(12){opacity:1;transform:none;transition-delay:1.32s}
+    .reveal-stagger.on > *:nth-child(13){opacity:1;transform:none;transition-delay:1.44s}
+    .reveal-stagger.on > *:nth-child(14){opacity:1;transform:none;transition-delay:1.56s}
+
+    /* ══════════════════════════════════════
+       RESPONSIVE
+    ══════════════════════════════════════ */
+    @media(max-width:1300px){
+      .ap-float-card{display:none;}
+    }
+    @media(max-width:900px){
+      .ap-mission-grid,.ap-conv-inner,.ap-val-head,.ap-team-head{ grid-template-columns:1fr; gap:40px; }
+      .ap-numbers-grid{ grid-template-columns:repeat(2,1fr);gap:40px; }
+      .ap-num-item{ border-right:none;border-bottom:1px solid rgba(255,255,255,.08);padding:0 0 40px; }
+      .ap-num-item:last-child,.ap-num-item:nth-child(2){ border-bottom:none; }
+      .ap-val-row{ grid-template-columns:48px 1fr;gap:0 24px; }
+      .ap-val-desc{ display:none; }
+      .ap-team-grid{ grid-template-columns:repeat(2,1fr); }
+      .ap-testi-card{ min-width:calc(100% - 0px); }
+      .ap-cta-inner{ grid-template-columns:1fr; }
+      .ap-cta-btns{ flex-direction:row;flex-wrap:wrap; }
+      .ap-testi-head{ flex-direction:column;align-items:flex-start;gap:24px; }
+      .ap-since{ flex-direction:column;gap:16px; }
+      .ap-since-year{ font-size:clamp(50px,10vw,80px); }
+    }
+    @media(max-width:600px){
+      .ap-team-grid{ grid-template-columns:1fr; }
+    }
+
+    /* ══════════════════════════════════
+       FRISE CHRONOLOGIQUE
+    ══════════════════════════════════ */
+    .ap-timeline { background:#f4f6f9;padding:100px 0;overflow:hidden; }
+    .ap-tl-head { margin-bottom:72px; }
+    .ap-tl-head .label { display:block;margin-bottom:10px; }
+    .ap-tl-head h2 { font-size:clamp(28px,3.5vw,44px);color:var(--navy);font-weight:900;letter-spacing:-.4px;line-height:1.1; }
+
+    /* Vertical rail */
+    .ap-tl-rail { position:relative;display:flex;gap:24px;padding:40px 0;overflow-x:auto;overflow-y:hidden;scroll-behavior:smooth;margin:0 auto;max-width:100%; }
+    .ap-tl-rail::before { content:'';position:absolute;left:0;top:0;height:2px;background:linear-gradient(to right,transparent 0%,var(--cyan) 1%,var(--cyan) 100%);z-index:2;width:200%;min-width:200%; }
+
+    /* Each milestone */
+    .ap-tl-item { display:flex;flex-direction:column;align-items:flex-start;gap:0;margin-bottom:0;position:relative;flex-shrink:0;width:320px;padding-top:40px; }
+    .ap-tl-item:last-child { margin-bottom:0; }
+
+    /* Dot on the rail */
+    .ap-tl-dot { width:14px;height:14px;border-radius:50%;background:#fff;border:2.5px solid var(--cyan);position:absolute;z-index:2;top:-26px;left:0;transition:transform .3s ease; }
+    .ap-tl-item.highlight .ap-tl-dot { background:var(--orange);border-color:var(--orange);width:18px;height:18px;box-shadow:0 0 0 5px rgba(224,90,43,.18);top:-29px; }
+
+    /* Card */
+    .ap-tl-card { background:#fff;border-radius:14px;padding:24px 28px;position:relative;box-shadow:0 4px 24px rgba(3,38,106,.06);transition:transform .3s ease,box-shadow .3s ease; }
+    .ap-tl-card:hover { transform:translateY(-4px);box-shadow:0 12px 40px rgba(3,38,106,.12); }
+    .ap-tl-year-ghost { position:absolute;font-size:56px;font-weight:900;color:rgba(3,38,106,.05);line-height:1;top:-32px;left:0;pointer-events:none;letter-spacing:-3px; }
+    .ap-tl-tag { font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);margin-bottom:6px;display:block; }
+    .ap-tl-item.highlight .ap-tl-tag { color:var(--orange); }
+    .ap-tl-year { font-size:22px;font-weight:900;color:var(--navy);margin-bottom:4px; }
+    .ap-tl-title { font-size:15px;font-weight:700;color:var(--navy);margin-bottom:6px; }
+    .ap-tl-desc { font-size:13px;color:#6b7a99;line-height:1.7; }
+
+    /* Removed grid layout rules - now using flexbox */
+    .ap-tl-item .ap-tl-empty { display:none; }
+
+    /* Reveal animation */
+    .ap-tl-item { opacity:0;transform:translateX(24px);transition:opacity .55s ease,transform .55s ease; }
+    .ap-tl-item.tl-on { opacity:1;transform:translateX(0); }
+    .ap-tl-item:nth-child(1) { transition-delay:.05s; }
+    .ap-tl-item:nth-child(2) { transition-delay:.12s; }
+    .ap-tl-item:nth-child(3) { transition-delay:.19s; }
+    .ap-tl-item:nth-child(4) { transition-delay:.26s; }
+    .ap-tl-item:nth-child(5) { transition-delay:.33s; }
+    .ap-tl-item:nth-child(6) { transition-delay:.40s; }
+    .ap-tl-item:nth-child(7) { transition-delay:.47s; }
+
+    /* Mobile: keep horizontal scroll */
+    @media(max-width:768px){
+      .ap-tl-item { width:280px;padding-top:40px; }
+      .ap-tl-year-ghost { font-size:42px; }
+      .ap-tl-card { padding:20px 24px; }
+      .ap-tl-title { font-size:14px; }
+      .ap-tl-desc { font-size:12px; }
+    }
+
+    /* ── CURSOR IMAGE PREVIEW ── */
+    #tl-cursor-preview {
+      position:fixed;
+      width:260px;
+      height:175px;
+      border-radius:14px;
+      overflow:hidden;
+      pointer-events:none;
+      z-index:9999;
+      opacity:0;
+      transform:scale(0.82) rotate(-3deg) translateY(8px);
+      transition:opacity .28s ease, transform .35s cubic-bezier(.34,1.56,.64,1);
+      box-shadow:0 24px 64px rgba(3,38,106,.28), 0 0 0 1px rgba(255,255,255,.15);
+      will-change:transform,opacity;
+    }
+    #tl-cursor-preview.tl-img-active {
+      opacity:1;
+      transform:scale(1) rotate(-2deg) translateY(0);
+    }
+    #tl-cursor-preview img {
+      width:100%;height:100%;object-fit:cover;display:block;
+    }
+    #tl-cursor-preview::after {
+      content:'';position:absolute;inset:0;
+      background:linear-gradient(160deg,rgba(29,189,242,.08) 0%,transparent 60%);
+      border-radius:14px;
+    }
+    /* Subtle cursor upgrade on hovered cards */
+    .ap-tl-card[data-img] { cursor:crosshair; }
+  </style>
+</head>
+<body>
+<div class="mob-menu" id="mobMenu">
+  <button class="mob-close" onclick="closeMob()">✕</button>
+  <a href="index.html">Accueil</a>
+  <a href="a-propos.html" class="active">À propos</a>
+  <a href="expertises.html">Expertises</a>
+  <a href="secteurs.html">Secteurs</a>
+  <a href="transformation.html">Transformation</a>
+  <a href="publications.html">Publications</a>
+  <a href="carrieres.html">Carrières</a>
+  <a href="contact.html">Contact</a>
+  <div class="mob-lang-switch"><button class="lang-btn active">FR</button><button class="lang-btn" onclick="checkEnLang()">EN</button></div>
+</div>
+<nav class="navbar solid" id="navbar">
+  <div class="container"><div class="nav-inner">
+    <a href="index.html" class="nav-logo-link"><img src="logo-official.svg" class="nav-logo-img" alt="OPEO"/></a>
+    <ul class="nav-links">
+      <li><a href="a-propos.html" class="active">À propos</a></li>
+      <li><a href="expertises.html">Expertises</a></li>
+      <li class="has-drop"><a href="secteurs.html">Secteurs <svg class="drop-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></a><div class="nav-drop nav-drop-wide nav-drop-sec"><div class="mega-header"><span class="mega-label">Nos Secteurs</span></div><div class="drop-grid drop-grid-2"><a href="secteur-luxe.html" class="drop-card"><span class="drop-card-title">Luxe</span></a><a href="secteur-process.html" class="drop-card"><span class="drop-card-title">Industrie de Process</span></a><a href="secteur-aeronautique.html" class="drop-card"><span class="drop-card-title">Aéronautique & Défense</span></a><a href="secteur-pharma.html" class="drop-card"><span class="drop-card-title">Pharma & Santé</span></a></div></div></li>
+      <li><a href="transformation.html">Transformation</a></li>
+      <li><a href="publications.html">Publications</a></li>
+      <li><a href="carrieres.html">Carrières</a></li>
+      <li><a href="contact.html" class="cta-link">Contact</a></li>
+    </ul>
+    <div class="lang-switch"><button class="lang-btn active">FR</button><button class="lang-btn" onclick="checkEnLang()">EN</button></div>
+      <button class="hamburger" onclick="openMob()"><span></span><span></span><span></span></button>
+  </div></div>
+</nav>
+
+<!-- ① HERO -->
+<section class="page-hero">
+  <div class="page-hero-grid"></div>
+  <div class="page-hero-blob"></div>
+  <div class="container">
+    <div class="page-hero-eyebrow"><div class="page-hero-line"></div><span class="page-hero-tag">Qui sommes-nous</span></div>
+    <h1>À propos d'<em>OPEO</em></h1>
+    <p>Un cabinet de conseil opérationnel européen, fondé sur une conviction : la transformation industrielle réelle se gagne sur le terrain, aux côtés des équipes.</p>
+  </div>
+</section>
+
+<!-- ② MISSION -->
+<section class="ap-mission">
+  <div class="container">
+    <div class="ap-mission-grid">
+
+      <div class="reveal">
+        <div class="ap-mission-text">
+          <span class="lbl">Notre mission</span>
+          <h2>Transformer l'industrie de l'intérieur</h2>
+          <div class="ap-pull">
+            <p>"Accompagner les industriels dans leurs transformations opérationnelles, en conjuguant performance durable et innovation."</p>
+          </div>
+          <p class="ap-manifesto">Depuis 2012, OPEO est au cœur de l'excellence industrielle, alliant une présence concrète sur le terrain et une exploration constante des tendances et grands changements de notre société.</p>
+          <p class="ap-manifesto">Nous sommes convaincus que la réussite passe par une transformation ancrée dans la réalité des usines et des organisations, tout en intégrant les nouveaux leviers de performance : digital, économie circulaire, excellence opérationnelle.</p>
+          <p class="ap-manifesto">Notre approche : être un <strong>partenaire exigeant et bienveillant</strong>, guidé par des valeurs d'excellence, de responsabilité sociale et d'engagement dans la création de valeur.</p>
+        </div>
+        <div class="ap-since">
+          <div class="ap-since-year">2012</div>
+          <div class="ap-since-text">OPEO naît d'une conviction forte : l'industrie française et européenne mérite un conseil qui s'implique véritablement, qui descend dans les ateliers et reste aux côtés des équipes jusqu'au résultat.</div>
+        </div>
+      </div>
+
+      <div class="ap-mission-visual reveal" data-d="1">
+        <div class="ap-photo-wrap">
+          <div class="ap-photo-overlay"></div>
+          <div class="ap-photo-content">
+            <span class="ap-photo-tag">Indicateurs clés</span>
+            <div class="ap-stats-row">
+              <div class="ap-stat">
+                <div class="ap-stat-num counter" data-target="14" data-suffix="+">0+</div>
+                <div class="ap-stat-lbl">Années d'expertise</div>
+              </div>
+              <div class="ap-stat">
+                <div class="ap-stat-num counter" data-target="50" data-suffix="+">0+</div>
+                <div class="ap-stat-lbl">Consultants</div>
+              </div>
+              <div class="ap-stat">
+                <div class="ap-stat-num counter" data-target="700" data-suffix="+">0+</div>
+                <div class="ap-stat-lbl">Missions réalisées</div>
+              </div>
+              <div class="ap-stat">
+                <div class="ap-stat-num">2</div>
+                <div class="ap-stat-lbl">Bureaux en Europe</div>
+              </div>
+            </div>
+          </div>
+          <!-- floating card -->
+          <div class="ap-float-card">
+            <div class="ap-float-card-tag">Présence</div>
+            <div class="ap-float-card-num">France <em>&</em> Suisse</div>
+            <div class="ap-float-card-lbl">France · Suisse</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ③ CONVICTION éditoriale -->
+<section class="ap-conviction">
+  <div class="container">
+    <div class="ap-conv-inner reveal">
+      <div class="ap-conv-left">
+        <span class="lbl">Notre conviction</span>
+        <h2>Ce qui nous distingue</h2>
+      </div>
+      <div class="ap-conv-right">
+        <span class="ap-conv-mark">"</span>
+        <blockquote>
+          La performance industrielle se construit <em>sur le terrain</em>, pas depuis un bureau. Nous travaillons là où les décisions ont un impact concret.
+        </blockquote>
+        <p>Chez OPEO, nous refusons le conseil à distance. Nos consultants s'immergent dans vos usines, vos équipes et vos processus pour livrer des transformations ancrées dans votre réalité, mesurables, durables et portées par vos collaborateurs.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ③bis FRISE CHRONOLOGIQUE -->
+<section class="ap-timeline">
+  <div class="container">
+    <div class="ap-tl-head reveal">
+      <span class="label">Notre histoire</span>
+      <h2>10 ans de transformation<br>industrielle</h2>
+    </div>
+    <div class="ap-tl-rail">
+
+      <div class="ap-tl-item tl-on">
+        <div class="ap-tl-card" data-img="hero-bg.jpg">
+          <div class="ap-tl-year-ghost">2012</div>
+          <span class="ap-tl-tag">Fondation</span>
+          <div class="ap-tl-year">2012</div>
+          <div class="ap-tl-title">Création d'OPEO</div>
+          <p class="ap-tl-desc">OPEO est créé par David Machenaud, Frédéric Sandei et Michael Valentin avec l'envie d'entreprendre et de bâtir un cabinet spécialisé dans l'industrie.</p>
+        </div>
+        <div class="ap-tl-dot"></div>
+        <div class="ap-tl-empty"></div>
+      </div>
+
+      <div class="ap-tl-item tl-on">
+        <div class="ap-tl-empty"></div>
+        <div class="ap-tl-dot"></div>
+        <div class="ap-tl-card" data-img="hero-apropos.jpg">
+          <div class="ap-tl-year-ghost">2014</div>
+          <span class="ap-tl-tag">Premiers clients</span>
+          <div class="ap-tl-year">2014</div>
+          <div class="ap-tl-title">Premiers clients et premiers recrutements</div>
+          <p class="ap-tl-desc">Après les premiers mois de lancement, OPEO gagne ses premiers clients dans la sidérurgie, le luxe et l'aéronautique, puis l'équipe commence à s'agrandir.</p>
+        </div>
+      </div>
+
+      <div class="ap-tl-item tl-on">
+        <div class="ap-tl-card" data-img="mission-bg.jpg">
+          <div class="ap-tl-year-ghost">2018</div>
+          <span class="ap-tl-tag">Digital</span>
+          <div class="ap-tl-year">2018</div>
+          <div class="ap-tl-title">Le virage digital</div>
+          <p class="ap-tl-desc">OPEO commence à intégrer davantage le digital et les données dans ses accompagnements industriels, dans un contexte marqué par l'essor de l'industrie du futur.</p>
+        </div>
+        <div class="ap-tl-dot"></div>
+        <div class="ap-tl-empty"></div>
+      </div>
+
+      <div class="ap-tl-item tl-on">
+        <div class="ap-tl-empty"></div>
+        <div class="ap-tl-dot"></div>
+        <div class="ap-tl-card" data-img="banniere-publications.jpg">
+          <div class="ap-tl-year-ghost">2020</div>
+          <span class="ap-tl-tag">Crise</span>
+          <div class="ap-tl-year">2020</div>
+          <div class="ap-tl-title">La crise Covid</div>
+          <p class="ap-tl-desc">La crise sanitaire provoque un arrêt brutal de l'activité, mais OPEO reste proche de ses clients et prépare progressivement la reprise.</p>
+        </div>
+      </div>
+
+      <div class="ap-tl-item tl-on">
+        <div class="ap-tl-card" data-img="publications.jpg">
+          <div class="ap-tl-year-ghost">2021</div>
+          <span class="ap-tl-tag">Croissance</span>
+          <div class="ap-tl-year">2021</div>
+          <div class="ap-tl-title">Reprise et nouvelle croissance</div>
+          <p class="ap-tl-desc">Après le Covid, l'activité repart fortement. OPEO recrute, se structure davantage et développe de nouveaux sujets comme l'industrie circulaire et la décarbonation.</p>
+        </div>
+        <div class="ap-tl-dot"></div>
+        <div class="ap-tl-empty"></div>
+      </div>
+
+      <div class="ap-tl-item tl-on">
+        <div class="ap-tl-empty"></div>
+        <div class="ap-tl-dot"></div>
+        <div class="ap-tl-card" data-img="hero-bg.jpg">
+          <div class="ap-tl-year-ghost">2024</div>
+          <span class="ap-tl-tag">Transformation</span>
+          <div class="ap-tl-year">2024</div>
+          <div class="ap-tl-title">Un contexte industriel plus chahuté</div>
+          <p class="ap-tl-desc">Face à l'instabilité économique, géopolitique et énergétique, OPEO accompagne ses clients dans une période de transformation plus incertaine.</p>
+        </div>
+      </div>
+
+      <div class="ap-tl-item highlight tl-on">
+        <div class="ap-tl-card" data-img="hero-bg.jpg">
+          <div class="ap-tl-year-ghost">Auj.</div>
+          <span class="ap-tl-tag">Innovation</span>
+          <div class="ap-tl-year">Aujourd'hui</div>
+          <div class="ap-tl-title">Agilité et intelligence artificielle</div>
+          <p class="ap-tl-desc">OPEO explore l'IA comme levier pour aider les industriels à gagner en agilité, à s'adapter plus vite aux marchés et à améliorer leur performance.</p>
+        </div>
+        <div class="ap-tl-dot"></div>
+        <div class="ap-tl-empty"></div>
+      </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ⑤ TÉMOIGNAGES -->
+<section class="ap-testi">
+  <div class="container">
+    <div class="ap-testi-header reveal">
+      <span class="lbl">Notre culture</span>
+      <h2>Des parcours marqués par<br>la passion de l'industrie</h2>
+    </div>
+    <div class="ap-testi-grid reveal-stagger">
+
+      <div class="ap-tq featured">
+        <div class="ap-tq-quote">"</div>
+        <p class="ap-tq-text">J'ai été séduit par le défi intellectuel et politique que représente l'aventure OPEO : construire ensemble le futur de nos industries.</p>
+        <div class="ap-tq-author">
+          <div class="ap-tq-ava">SD</div>
+          <div><div class="ap-tq-name">Sebastien Debois</div><div class="ap-tq-role">Chef de projet</div></div>
+        </div>
+      </div>
+
+      <div class="ap-tq">
+        <div class="ap-tq-quote">"</div>
+        <p class="ap-tq-text">Chez OPEO, l'humain et la diversité des missions m'ont tout de suite captivée. Chaque jour est une nouvelle opportunité d'apprendre dans des industries variées.</p>
+        <div class="ap-tq-author">
+          <div class="ap-tq-ava">KB</div>
+          <div><div class="ap-tq-name">Kenza Boussaid</div><div class="ap-tq-role">UX Designer</div></div>
+        </div>
+      </div>
+
+      <div class="ap-tq">
+        <div class="ap-tq-quote">"</div>
+        <p class="ap-tq-text">En arrivant chez OPEO, j'ai été marqué par l'implication des associés au sein des équipes et la bienveillance de tous.</p>
+        <div class="ap-tq-author">
+          <div class="ap-tq-ava">SR</div>
+          <div><div class="ap-tq-name">Simon Ratival</div><div class="ap-tq-role">Chef de projet</div></div>
+        </div>
+      </div>
+
+      <div class="ap-tq">
+        <div class="ap-tq-quote">"</div>
+        <p class="ap-tq-text">Chez OPEO, notre culture est un écosystème alliant excellence, collaboration et bien-être. Nos consultants s'épanouissent grâce à des valeurs fortes et un management horizontal.</p>
+        <div class="ap-tq-author">
+          <div class="ap-tq-ava">DR</div>
+          <div><div class="ap-tq-name">Diego R.</div><div class="ap-tq-role">Chargé de marketing</div></div>
+        </div>
+      </div>
+
+      <div class="ap-tq">
+        <div class="ap-tq-quote">"</div>
+        <p class="ap-tq-text">J'aurais aimé travailler avec des consultants comme ceux d'OPEO lorsque j'étais en usine : engagés, proches du terrain et véritablement à l'écoute des équipes.</p>
+        <div class="ap-tq-author">
+          <div class="ap-tq-ava">SS</div>
+          <div><div class="ap-tq-name">Solène Soulié</div><div class="ap-tq-role">Cheffe de projet</div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ⑥ ÉQUIPE -->
+<section class="ap-equipe">
+  <div class="container">
+    <div class="ap-team-head reveal">
+      <div>
+        <span class="label">Notre équipe</span>
+        <h2>Les visages d'OPEO</h2>
+      </div>
+      <div class="ap-team-filter">
+        <button class="ap-tf-btn active" onclick="filterTeam('all',this)">Tous</button>
+        <button class="ap-tf-btn" onclick="filterTeam('assoc',this)">Associés</button>
+        <button class="ap-tf-btn" onclick="filterTeam('dp',this)">Dir. Projets</button>
+        <button class="ap-tf-btn" onclick="filterTeam('mkt',this)">Marketing &amp; Ventes</button>
+        <button class="ap-tf-btn" onclick="filterTeam('rh',this)">RH</button>
+      </div>
+    </div>
+    <div class="ap-team-grid reveal-stagger on" id="teamGrid">
+      <div class="ap-team-card" data-cat="assoc"><div class="ap-team-ava">AT</div><div class="ap-team-name">Alexandre Tissot</div><div class="ap-team-role">Directeur Exécutif</div><span class="ap-team-badge">Associé</span></div>
+      <div class="ap-team-card" data-cat="assoc"><div class="ap-team-ava">DM</div><div class="ap-team-name">David Machenaud</div><div class="ap-team-role">Associé Fondateur</div><span class="ap-team-badge">Associé</span></div>
+      <div class="ap-team-card" data-cat="assoc"><div class="ap-team-ava">FS</div><div class="ap-team-name">Frédéric Sandei</div><div class="ap-team-role">Associé Fondateur</div><span class="ap-team-badge">Associé</span></div>
+      <div class="ap-team-card" data-cat="assoc"><div class="ap-team-ava">MV</div><div class="ap-team-name">Michaël Valentin</div><div class="ap-team-role">Associé Fondateur</div><span class="ap-team-badge">Associé</span></div>
+      <div class="ap-team-card" data-cat="assoc"><div class="ap-team-ava">OR</div><div class="ap-team-name">Odile Ricour</div><div class="ap-team-role">Associée</div><span class="ap-team-badge">Associé</span></div>
+      <div class="ap-team-card" data-cat="assoc"><div class="ap-team-ava">CN</div><div class="ap-team-name">Clément Niessen</div><div class="ap-team-role">Associé</div><span class="ap-team-badge">Associé</span></div>
+      <div class="ap-team-card" data-cat="assoc"><div class="ap-team-ava">TD</div><div class="ap-team-name">Teimour Daly</div><div class="ap-team-role">Partner</div><span class="ap-team-badge">Associé</span></div>
+      <div class="ap-team-card" data-cat="dp"><div class="ap-team-ava">GA</div><div class="ap-team-name">Ghalem Allai</div><div class="ap-team-role">Directeur de Projets</div><span class="ap-team-badge">Dir. Projets</span></div>
+      <div class="ap-team-card" data-cat="dp"><div class="ap-team-ava">NP</div><div class="ap-team-name">Norman Pardanaud</div><div class="ap-team-role">Directeur de Projets</div><span class="ap-team-badge">Dir. Projets</span></div>
+      <div class="ap-team-card" data-cat="dp"><div class="ap-team-ava">GC</div><div class="ap-team-name">Gautier Chevreton</div><div class="ap-team-role">Directeur de Projets</div><span class="ap-team-badge">Dir. Projets</span></div>
+      <div class="ap-team-card" data-cat="dp"><div class="ap-team-ava">SD</div><div class="ap-team-name">Sebastien Desbois</div><div class="ap-team-role">Directeur de Projets</div><span class="ap-team-badge">Dir. Projets</span></div>
+      <div class="ap-team-card" data-cat="rh"><div class="ap-team-ava">AO</div><div class="ap-team-name">Athyna Olympio</div><div class="ap-team-role">Directrice RH</div><span class="ap-team-badge">RH</span></div>
+      <div class="ap-team-card" data-cat="mkt"><div class="ap-team-ava">WL</div><div class="ap-team-name">Wendy Lemba</div><div class="ap-team-role">Responsable Pôle Marketing, Communication &amp; Support des Ventes</div><span class="ap-team-badge">Marketing &amp; Ventes</span></div>
+      <div class="ap-team-card" data-cat="mkt"><div class="ap-team-ava">CD</div><div class="ap-team-name">Clarisse Degros</div><div class="ap-team-role">Responsable Support de Ventes et Marketing</div><span class="ap-team-badge">Marketing &amp; Ventes</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ⑦ CTA -->
+<!-- ORANGE CTA BAND -->
+<section class="orange-band">
+  <div class="container">
+    <div class="orange-band-inner reveal">
+      <div>
+        <div class="orange-band-eyebrow">Passons à l'action</div>
+        <h2>Prêts à transformer<br>vos opérations ?</h2>
+        <p>Rencontrons-nous pour comprendre vos enjeux et co-construire votre feuille de route de transformation opérationnelle.</p>
+      </div>
+      <div class="orange-band-actions">
+        <a href="https://meetings-eu1.hubspot.com/wendy-lemba" class="btn btn-white" target="_blank" rel="noopener">Prendre rendez-vous →</a>
+        <a href="http://opeo-conseil-145654140.hs-sites-eu1.com/nos-offres-page-de-dispatch" class="btn btn-ghost-white" target="_blank" rel="noopener">Voir nos offres</a>
+        <a href="https://share-eu1.hsforms.com/2jHE10lqlTX6kVxjdNJJYng2epvgc" class="btn btn-ghost-white" target="_blank" rel="noopener">Télécharger la brochure</a>
+        <a href="contact.html#question" class="btn btn-ghost-white">Poser une question</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer"><div class="container">
+  <div class="footer-grid">
+    <div class="footer-brand"><a href="index.html" class="nav-logo-link"><img src="logo-official.svg" class="nav-logo-img" alt="OPEO"/></a><p>Cabinet de Conseil européen spécialisé dans la transformation des opérations industrielles.</p><div class="footer-socials"><a href="https://www.linkedin.com/company/opeo/" target="_blank" class="soc-link">in</a><a href="https://www.youtube.com/channel/UCHxWDzGkSoEmFhDaU6nbsCg" target="_blank" class="soc-link">▶</a></div></div>
+    
+    <div class="footer-col"><h4>À propos</h4><ul class="footer-nav"><li><a href="a-propos.html">Notre mission</a></li><li><a href="a-propos.html#culture">Nos valeurs</a></li><li><a href="carrieres.html">Carrières</a></li></ul></div>
+    <div class="footer-col"><h4>Contact</h4><ul class="footer-nav"><li><a href="contact.html">Nous contacter</a></li><li><a href="publications.html">Publications</a></li></ul></div>
+  </div>
+  <div class="footer-bottom"><p>@OPEO 2025 · Tous droits réservés</p><div class="footer-tagline">Vos Opérations sont <em>Stratégiques</em></div><p>Mentions légales · CGV · Égalité H/F</p></div>
+</div></footer>
+
+<script>
+function openMob(){document.getElementById('mobMenu').classList.add('open');}
+function closeMob(){document.getElementById('mobMenu').classList.remove('open');}
+
+/* ── REVEAL ── */
+const revObs = new IntersectionObserver(e=>e.forEach(x=>{
+  if(x.isIntersecting){x.target.classList.add('on');revObs.unobserve(x.target);}
+}),{threshold:.08,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.reveal,.reveal-stagger').forEach(el=>revObs.observe(el));
+
+/* ── COUNTERS ── */
+const ctrObs = new IntersectionObserver(e=>e.forEach(x=>{
+  if(x.isIntersecting){animCounter(x.target);ctrObs.unobserve(x.target);}
+}),{threshold:.5});
+document.querySelectorAll('.counter').forEach(el=>ctrObs.observe(el));
+function animCounter(el){
+  const t=+el.dataset.target,s=el.dataset.suffix||'';
+  let v=0;const inc=t/(1400/16);
+  const tm=setInterval(()=>{v+=inc;if(v>=t){el.textContent=t+s;clearInterval(tm);}else{el.textContent=Math.floor(v)+s;}},16);
+}
+
+
+/* ── TEAM FILTER ── */
+function filterTeam(cat,btn){
+  document.querySelectorAll('.ap-tf-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.ap-team-card').forEach(c=>{
+    const show=cat==='all'||c.dataset.cat===cat;
+    c.style.display=show?'':'none';
+  });
+}
+
+// Timeline IntersectionObserver
+const tlObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting){ e.target.classList.add('tl-on'); tlObs.unobserve(e.target); }
+  });
+}, { threshold: 0.15 });
+document.querySelectorAll('.ap-tl-item').forEach(el => tlObs.observe(el));
+
+// Timeline hover image - cursor follower
+(function(){
+  var preview = document.getElementById('tl-cursor-preview');
+  if(!preview) return;
+  var img = preview.querySelector('img');
+
+  document.addEventListener('mousemove', function(e){
+    preview.style.left = (e.clientX + 30) + 'px';
+    preview.style.top  = Math.max(10, e.clientY - 100) + 'px';
+  });
+
+  document.querySelectorAll('.ap-tl-card[data-img]').forEach(function(card){
+    // Preload image on mouseenter
+    card.addEventListener('mouseenter', function(){
+      var src = card.getAttribute('data-img');
+      img.src = src;
+      img.onerror = function(){ preview.classList.remove('tl-img-active'); };
+      img.onload  = function(){ preview.classList.add('tl-img-active'); };
+      // If already cached, onload may not fire - check complete
+      if(img.complete && img.naturalWidth) preview.classList.add('tl-img-active');
+    });
+    card.addEventListener('mouseleave', function(){
+      preview.classList.remove('tl-img-active');
+    });
+  });
+})();
+</script>
+
+<!-- LANG MODAL -->
+<div class="lang-modal-overlay" id="langModal" onclick="closeLangModal()">
+  <div class="lang-modal" onclick="event.stopPropagation()">
+    <button class="lang-modal-close" onclick="closeLangModal()" aria-label="Fermer">&#x2715;</button>
+    <div class="lang-modal-ico">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+    </div>
+    <div class="lang-modal-kicker">EN &middot; English</div>
+    <h3>Version anglaise<br>en pr&eacute;paration</h3>
+    <p>Nous travaillons &agrave; la traduction de l&rsquo;ensemble de nos contenus en anglais. Revenez bient&ocirc;t.</p>
+    <a href="#" class="btn btn-navy" onclick="closeLangModal();return false;">Revenir au site &rarr;</a>
+  </div>
+</div>
+
+<!-- Timeline cursor image preview -->
+<div id="tl-cursor-preview"><img src="" alt="" loading="lazy"></div>
+
+<script>
+/* Lang switch hover particles */
+(function(){
+  var lastT = 0;
+  document.querySelectorAll('.lang-btn:not(.active)').forEach(function(btn){
+    btn.addEventListener('pointermove', function(e){
+      var now = Date.now();
+      if(now - lastT < 100) return;
+      lastT = now;
+      var rect = btn.getBoundingClientRect();
+      var c = document.createElement('div');
+      c.className = 'lang-circle';
+      c.style.left = (e.clientX - rect.left) + 'px';
+      c.style.top  = (e.clientY - rect.top)  + 'px';
+      btn.appendChild(c);
+      requestAnimationFrame(function(){ c.classList.add('fade-in'); });
+      setTimeout(function(){ c.classList.replace('fade-in','fade-out'); }, 900);
+      setTimeout(function(){ c.remove(); }, 2100);
+    });
+  });
+})();
+</script>
+</body>
+</html>

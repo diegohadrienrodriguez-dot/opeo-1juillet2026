@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Excellence Opérationnelle & Industrie 4.0 — OPEO</title>
+  <link rel="stylesheet" href="styles.css"/>
+  <style>
+
+    /* ─── Reading Progress Bar ─── */
+    #read-progress {
+      position: fixed;
+      top: 0; left: 0;
+      height: 3px;
+      width: 0%;
+      background: linear-gradient(90deg, var(--cyan), #E05A2B);
+      z-index: 9999;
+      transition: width .1s linear;
+    }
+
+    /* ─── Article Hero ─── */
+    .art-hero {
+      position: relative;
+      height: 78vh;
+      min-height: 520px;
+      overflow: hidden;
+      background: var(--navy);
+    }
+    .art-hero-img {
+      position: absolute;
+      inset: 0;
+      background: url("publications.jpg") center / cover no-repeat;
+      transform-origin: center;
+      will-change: transform;
+    }
+    .art-hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to top,
+        rgba(3,38,106,.92) 0%,
+        rgba(3,38,106,.45) 50%,
+        rgba(3,38,106,.15) 100%
+      );
+    }
+    .art-hero-content {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 0 0 52px 0;
+    }
+    .art-hero-content .container {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 40px;
+      align-items: end;
+    }
+    .art-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: rgba(255,255,255,.65);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      text-decoration: none;
+      margin-bottom: 22px;
+      transition: color .2s;
+    }
+    .art-back:hover { color: var(--cyan); }
+    .art-back svg { width:14px; height:14px; }
+    .art-meta-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+    .art-cat {
+      background: var(--cyan);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 5px 12px;
+      border-radius: 3px;
+    }
+    .art-cat-secondary {
+      background: rgba(255,255,255,.12);
+      color: rgba(255,255,255,.8);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 5px 12px;
+      border-radius: 3px;
+    }
+    .art-hero-title {
+      color: #fff;
+      font-size: clamp(28px, 4.2vw, 54px);
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      font-weight: 800;
+      margin-bottom: 0;
+    }
+    .art-hero-right {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      padding-bottom: 4px;
+    }
+    .art-stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: rgba(255,255,255,.12);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .art-stat {
+      background: rgba(3,38,106,.55);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 16px 18px;
+      border: 1px solid rgba(255,255,255,.08);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.07);
+    }
+    .art-stat-val {
+      color: var(--cyan);
+      font-size: 22px;
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .art-stat-label {
+      color: rgba(255,255,255,.55);
+      font-size: 11px;
+      font-weight: 500;
+      line-height: 1.3;
+    }
+    .art-author-mini {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(3,38,106,.55);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,.08);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.07);
+      padding: 14px 16px;
+      border-radius: 10px;
+    }
+    .art-author-ava {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--navy), #1a3d80);
+      border: 2px solid rgba(29,189,242,.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 800;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    .art-author-name {
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+    .art-author-role {
+      color: rgba(255,255,255,.5);
+      font-size: 11px;
+    }
+    .art-author-date {
+      color: rgba(255,255,255,.4);
+      font-size: 11px;
+      margin-top: 2px;
+    }
+
+    /* ─── Article Layout ─── */
+    .art-layout {
+      background: #fff;
+      padding: 72px 0 100px;
+    }
+    .art-grid {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 80px;
+      align-items: start;
+    }
+
+    /* ─── Article Body ─── */
+    .art-body { min-width: 0; }
+    .art-intro {
+      font-size: 19px;
+      line-height: 1.75;
+      color: var(--navy);
+      font-weight: 500;
+      margin-bottom: 36px;
+      padding-bottom: 36px;
+      border-bottom: 1px solid #e8edf5;
+    }
+    .art-body p {
+      font-size: 16.5px;
+      line-height: 1.85;
+      color: #374151;
+      margin-bottom: 26px;
+    }
+    .art-body h2 {
+      font-size: 26px;
+      color: var(--navy);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin: 52px 0 20px;
+      padding-top: 8px;
+      border-top: 3px solid var(--cyan);
+      display: inline-block;
+    }
+    .art-body h3 {
+      font-size: 19px;
+      color: var(--navy);
+      font-weight: 700;
+      margin: 36px 0 14px;
+    }
+
+    /* Drop cap */
+    .art-intro::first-letter {
+      float: left;
+      font-size: 78px;
+      line-height: .82;
+      font-weight: 900;
+      color: var(--navy);
+      margin-right: 10px;
+      margin-top: 6px;
+      font-family: Georgia, serif;
+    }
+
+    /* Pull quote */
+    .pull-quote {
+      margin: 44px -24px;
+      padding: 30px 36px;
+      border-left: 4px solid #E05A2B;
+      background: #faf9f7;
+      border-radius: 0 10px 10px 0;
+    }
+    .pull-quote p {
+      font-size: 22px !important;
+      line-height: 1.5 !important;
+      font-style: italic;
+      color: var(--navy) !important;
+      font-weight: 600;
+      margin-bottom: 12px !important;
+    }
+    .pull-quote cite {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #E05A2B;
+      font-style: normal;
+    }
+
+    /* In-article image */
+    .art-figure {
+      margin: 44px -24px;
+    }
+    .art-figure img {
+      width: 100%;
+      height: 400px;
+      object-fit: cover;
+      border-radius: 12px;
+      display: block;
+    }
+    .art-figure figcaption {
+      margin-top: 12px;
+      font-size: 12px;
+      color: #9ca3af;
+      padding-left: 4px;
+      border-left: 2px solid #e5e7eb;
+      padding-left: 10px;
+    }
+
+    /* Key data callout */
+    .art-data-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+      margin: 44px 0;
+      padding: 32px;
+      background: linear-gradient(135deg, #f0f6ff 0%, #e8f4fe 100%);
+      border-radius: 16px;
+      border: 1px solid rgba(29,189,242,.15);
+    }
+    .art-kpi { text-align: center; }
+    .art-kpi-val {
+      font-size: 34px;
+      font-weight: 900;
+      color: var(--navy);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .art-kpi-val span { color: var(--cyan); }
+    .art-kpi-label {
+      font-size: 12px;
+      color: #6b7280;
+      line-height: 1.4;
+    }
+    .art-kpi-divider {
+      width: 1px;
+      background: rgba(3,38,106,.1);
+      margin: 0 auto;
+      height: 100%;
+      display: none;
+    }
+
+    /* Tags */
+    .art-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 52px;
+      padding-top: 36px;
+      border-top: 1px solid #e8edf5;
+    }
+    .art-tag {
+      background: #f3f4f6;
+      color: #374151;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 4px;
+      text-decoration: none;
+      transition: all .2s;
+    }
+    .art-tag:hover {
+      background: var(--navy);
+      color: #fff;
+    }
+
+    /* ─── Sidebar ─── */
+    .art-sidebar {
+      position: sticky;
+      top: 104px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+    .sb-block {
+      background: #f8fafd;
+      border-radius: 14px;
+      padding: 24px;
+      border: 1px solid #e8edf5;
+    }
+    .sb-label {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 16px;
+    }
+    .sb-author-ava {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--navy), #1a5080);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 800;
+      font-size: 18px;
+      margin-bottom: 14px;
+    }
+    .sb-author-name {
+      color: var(--navy);
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 3px;
+    }
+    .sb-author-role {
+      color: #6b7280;
+      font-size: 12px;
+      line-height: 1.5;
+      margin-bottom: 14px;
+    }
+    .sb-author-link {
+      color: var(--cyan);
+      font-size: 12px;
+      font-weight: 600;
+      text-decoration: none;
+    }
+    /* TOC */
+    .sb-toc { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 6px; }
+    .sb-toc li a {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      color: #374151;
+      font-size: 13px;
+      line-height: 1.4;
+      text-decoration: none;
+      padding: 6px 0;
+      border-bottom: 1px solid #f0f0f0;
+      transition: color .2s;
+    }
+    .sb-toc li a:hover { color: var(--navy); }
+    .sb-toc li a .toc-num {
+      color: var(--cyan);
+      font-weight: 700;
+      font-size: 11px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    /* Share */
+    .sb-share-btns { display: flex; flex-direction: column; gap: 8px; }
+    .sb-share-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all .2s;
+    }
+    .sb-share-btn.li { background: #0a66c2; color: #fff; }
+    .sb-share-btn.li:hover { background: #0958a8; }
+    .sb-share-btn.cp { background: #f3f4f6; color: #374151; }
+    .sb-share-btn.cp:hover { background: #e5e7eb; }
+    .sb-share-btn svg { width: 16px; height: 16px; flex-shrink: 0; }
+    /* Reading time pill */
+    .sb-read-time {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: #6b7280;
+      margin-top: -8px;
+    }
+    .sb-read-time svg { width: 14px; height: 14px; color: var(--cyan); }
+
+    /* ─── Related Articles ─── */
+    .art-related {
+      background: #f8fafd;
+      padding: 80px 0;
+    }
+    .related-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 44px;
+    }
+    .related-header h2 {
+      font-size: 32px;
+      color: var(--navy);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+    .related-header a {
+      color: var(--cyan);
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: none;
+    }
+    .related-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 24px;
+    }
+    .rel-card {
+      background: #fff;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid #e8edf5;
+      text-decoration: none;
+      display: block;
+      transition: transform .25s, box-shadow .25s;
+    }
+    .rel-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 40px -12px rgba(3,38,106,.12);
+    }
+    .rel-card-img {
+      height: 180px;
+      object-fit: cover;
+      width: 100%;
+      display: block;
+    }
+    .rel-card-body { padding: 20px; }
+    .rel-card-cat {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 8px;
+    }
+    .rel-card-title {
+      color: var(--navy);
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1.4;
+      margin-bottom: 10px;
+    }
+    .rel-card-date {
+      font-size: 12px;
+      color: #9ca3af;
+    }
+
+    /* Reveal */
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity .65s cubic-bezier(.16,1,.3,1), transform .65s cubic-bezier(.16,1,.3,1); }
+    .reveal.on { opacity: 1; transform: none; }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 960px) {
+      .art-hero-content .container { grid-template-columns: 1fr; }
+      .art-hero-right { display: none; }
+      .art-grid { grid-template-columns: 1fr; }
+      .art-sidebar { position: static; }
+      .related-grid { grid-template-columns: 1fr 1fr; }
+      .art-data-row { grid-template-columns: 1fr; gap: 24px; }
+      .pull-quote, .art-figure { margin-left: 0; margin-right: 0; }
+    }
+    @media (max-width: 600px) {
+      .related-grid { grid-template-columns: 1fr; }
+      .art-hero { height: 60vh; }
+      .art-intro::first-letter { font-size: 56px; }
+    }
+
+    /* ─── Download Banner ─── */
+    .art-dl {
+      background: #fff;
+      border-bottom: 1px solid #e8edf5;
+    }
+    .art-dl-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 16px 0;
+    }
+    .art-dl-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .art-dl-ico {
+      width: 36px; height: 36px;
+      background: #eef2fb;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .art-dl-ico svg { width: 16px; height: 16px; stroke: var(--navy); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .art-dl-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--navy);
+    }
+    .art-dl-meta {
+      font-size: 12px;
+      color: #9ca3af;
+      margin-top: 1px;
+    }
+    .art-dl-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--navy);
+      color: #fff;
+      padding: 9px 20px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .4px;
+      text-decoration: none;
+      white-space: nowrap;
+      flex-shrink: 0;
+      transition: background .2s;
+    }
+    .art-dl-btn:hover { background: var(--cyan); }
+    .art-dl-btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+    @media (max-width: 600px) {
+      .art-dl-inner { flex-wrap: wrap; }
+      .art-dl-meta { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Reading progress -->
+<div id="read-progress"></div>
+
+<!-- Mobile menu -->
+<div class="mob-menu" id="mobMenu">
+  <button class="mob-close" onclick="closeMob()">✕</button>
+  <a href="index.html">Accueil</a><a href="a-propos.html">À propos</a>
+  <a href="expertises.html">Expertises</a><a href="secteurs.html">Secteurs</a>
+  <a href="transformation.html">Transformation</a><a href="publications.html" class="active">Publications</a>
+  <a href="carrieres.html">Carrières</a><a href="contact.html">Contact</a>
+  <div class="mob-lang-switch"><button class="lang-btn active">FR</button><button class="lang-btn" onclick="checkEnLang()">EN</button></div>
+</div>
+
+<!-- Navbar -->
+<nav class="navbar solid">
+  <div class="container"><div class="nav-inner">
+    <a href="index.html" class="nav-logo-link"><img src="logo-official.svg" class="nav-logo-img" alt="OPEO" /></a>
+    <ul class="nav-links">
+      <li><a href="a-propos.html">À propos</a></li>
+      <li><a href="expertises.html">Expertises</a></li>
+      <li class="has-drop"><a href="secteurs.html">Secteurs <svg class="drop-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></a><div class="nav-drop nav-drop-wide nav-drop-sec"><div class="mega-header"><span class="mega-label">Nos Secteurs</span></div><div class="drop-grid drop-grid-2"><a href="secteur-luxe.html" class="drop-card"><span class="drop-card-title">Luxe</span></a><a href="secteur-process.html" class="drop-card"><span class="drop-card-title">Industrie de Process</span></a><a href="secteur-aeronautique.html" class="drop-card"><span class="drop-card-title">Aéronautique & Défense</span></a><a href="secteur-pharma.html" class="drop-card"><span class="drop-card-title">Pharma & Santé</span></a></div></div></li>
+      <li><a href="transformation.html">Transformation</a></li>
+      <li><a href="publications.html" class="active">Publications</a></li>
+      <li><a href="carrieres.html">Carrières</a></li>
+      <li><a href="contact.html" class="cta-link">Contact</a></li>
+    </ul>
+  </div></div>
+</nav>
+
+<!-- ─── ARTICLE HERO ─── -->
+<section class="art-hero">
+  <div class="art-hero-img" id="heroParallax"></div>
+  <div class="art-hero-overlay"></div>
+  <div class="art-hero-content">
+    <div class="container">
+      <div>
+        <a href="publications.html" class="art-back">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+          Publications
+        </a>
+        <div class="art-meta-row">
+          <span class="art-cat">Excellence Opérationnelle</span>
+          <span class="art-cat-secondary">Industrie 4.0</span>
+          <span class="art-cat-secondary">12 min de lecture</span>
+        </div>
+        <h1 class="art-hero-title">Excellence Opérationnelle<br>à l'ère de l'Industrie 4.0 :<br>dépasser le mythe du tout-digital</h1>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── DOWNLOAD BANNER ─── -->
+<section class="art-dl">
+  <div class="container">
+    <div class="art-dl-inner">
+      <div class="art-dl-left">
+        <div class="art-dl-ico">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </div>
+        <div>
+          <div class="art-dl-label">Télécharger cet article en PDF</div>
+          <div class="art-dl-meta">PDF · 8 pages · Accès gratuit</div>
+        </div>
+      </div>
+      <a href="#" class="art-dl-btn" download>
+        <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Télécharger
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ─── ARTICLE BODY ─── -->
+<section class="art-layout">
+  <div class="container">
+    <div class="art-grid">
+
+      <!-- Main content -->
+      <article class="art-body">
+
+        <p class="art-intro reveal">
+          La transformation digitale de l'industrie fait l'objet d'un engouement considérable. Pourtant, sur le terrain, la réalité est souvent bien différente du discours ambiant : les outils déployés à grands frais restent sous-utilisés, les opérateurs contournent les nouveaux systèmes, et les directions attendent en vain le retour sur investissement annoncé. La véritable excellence opérationnelle ne s'achète pas — elle se construit.
+        </p>
+
+        <h2 class="reveal">Le paradoxe de la transformation</h2>
+
+        <p class="reveal">Depuis dix ans, le terme « Industrie 4.0 » a envahi les agendas stratégiques. Capteurs IoT, jumeaux numériques, intelligence artificielle appliquée à la maintenance prédictive — l'arsenal technologique est impressionnant, et les promesses qui l'accompagnent, souvent vertigineuses. Mais combien de projets atteignent réellement leurs objectifs ? Les études sectorielles sont sans appel : moins de 40 % des déploiements industriels digitaux génèrent les gains de performance escomptés dans les délais prévus.</p>
+
+        <p class="reveal">Ce constat ne plaide pas contre la technologie. Il interroge la méthode avec laquelle elle est introduite dans l'organisation. L'erreur la plus fréquente consiste à superposer des outils numériques à des processus opérationnels défaillants, en espérant que la couche digitale corrigera les problèmes de fond. C'est précisément l'inverse qui fonctionne.</p>
+
+        <div class="pull-quote reveal">
+          <p>« La technologie amplifie ce qui existe déjà. Si les processus sont solides, le digital décuple leur efficacité. S'ils sont défaillants, il accélère leur dysfonctionnement. »</p>
+          <cite>David Machenaud · Associé OPEO</cite>
+        </div>
+
+        <h2 class="reveal">Reprendre les fondamentaux</h2>
+
+        <p class="reveal">L'excellence opérationnelle repose sur trois piliers indissociables : la stabilité des processus, la maîtrise des flux, et l'engagement des équipes. Ces trois dimensions ne peuvent être remplacées par aucun logiciel. Elles constituent le substrat sur lequel les outils digitaux viennent s'appuyer pour démultiplier leur impact.</p>
+
+        <p class="reveal">Dans les missions qu'OPEO mène auprès d'industriels européens — de l'aéronautique au luxe, en passant par la pharmaceutique — nous observons invariablement le même schéma de réussite : les entreprises qui obtiennent les meilleurs résultats post-transformation sont celles qui ont d'abord investi dans la clarification de leurs standards opérationnels, avant d'introduire la moindre technologie.</p>
+
+        <figure class="art-figure reveal">
+          <img src="banniere-publications.jpg" alt="Atelier industriel — excellence opérationnelle">
+          <figcaption>Atelier de production — mission Excellence Opérationnelle, client confidentiel (secteur aéronautique, France). Photo : OPEO.</figcaption>
+        </figure>
+
+        <h2 class="reveal">Les trois phases d'une transformation réussie</h2>
+
+        <h3 class="reveal">Phase 1 — Diagnostic de maturité opérationnelle</h3>
+
+        <p class="reveal">Avant tout déploiement technologique, il est essentiel d'évaluer honnêtement où en est l'organisation sur les pratiques de base : les standards existent-ils et sont-ils appliqués ? Les temps de cycle sont-ils maîtrisés ? Les anomalies sont-elles remontées et traitées structurellement ? Cette évaluation — que nous appelons chez OPEO le « diagnostic 360° » — dure généralement entre deux et quatre semaines et conditionne l'intégralité de la feuille de route qui suit.</p>
+
+        <div class="art-data-row reveal">
+          <div class="art-kpi">
+            <div class="art-kpi-val">+<span>34</span>%</div>
+            <div class="art-kpi-label">gain de productivité moyen sur les missions d'Excellence Opérationnelle OPEO</div>
+          </div>
+          <div class="art-kpi">
+            <div class="art-kpi-val"><span>18</span> mois</div>
+            <div class="art-kpi-label">délai moyen de retour sur investissement constaté</div>
+          </div>
+          <div class="art-kpi">
+            <div class="art-kpi-val"><span>9</span>/10</div>
+            <div class="art-kpi-label">clients ayant reconduit ou étendu la collaboration</div>
+          </div>
+        </div>
+
+        <h3 class="reveal">Phase 2 — Ancrage des pratiques lean</h3>
+
+        <p class="reveal">Une fois le diagnostic posé, la transformation s'engage par un travail de fond sur les pratiques lean : organisation des postes de travail (5S), standardisation des modes opératoires, déploiement du management visuel, mise en place de boucles de résolution de problèmes (PDCA). Ce travail, souvent jugé trop « basique » par des directions impatientes d'avancer vers le digital, est en réalité le plus déterminant pour la durabilité des gains obtenus.</p>
+
+        <p class="reveal">Les équipes terrain, impliquées dès cette phase dans la construction des standards, développent une appropriation qui sera décisive lors du déploiement des outils numériques. Un opérateur qui a participé à l'élaboration d'un standard ne contourne pas l'outil qui lui permet de le mesurer.</p>
+
+        <div class="pull-quote reveal">
+          <p>« Le lean n'est pas le contraire du digital. C'est sa condition préalable. Les meilleurs déploiements IoT que nous avons observés reposaient tous sur des fondations lean solides. »</p>
+          <cite>Alexandre Tissot · Directeur Général OPEO</cite>
+        </div>
+
+        <h3 class="reveal">Phase 3 — Amplification digitale ciblée</h3>
+
+        <p class="reveal">C'est seulement dans cette troisième phase que les outils digitaux entrent en jeu — et de façon chirurgicale. Pas de digitalisation systématique de tous les processus, mais une sélection rigoureuse des cas d'usage à fort impact : suivi en temps réel des indicateurs clés, alertes automatiques sur les dérives de processus, traçabilité des non-conformités, maintenance prédictive sur les équipements critiques.</p>
+
+        <p class="reveal">L'enjeu n'est pas de déployer la technologie la plus avancée, mais la plus pertinente au regard des enjeux spécifiques de chaque site. Un tableau de bord simple, maîtrisé par les équipes et alimenté en données fiables, sera toujours plus efficace qu'un système sophistiqué dont personne ne comprend vraiment les sorties.</p>
+
+        <div class="art-tags">
+          <a href="#" class="art-tag">Excellence Opérationnelle</a>
+          <a href="#" class="art-tag">Industrie 4.0</a>
+          <a href="#" class="art-tag">Lean Manufacturing</a>
+          <a href="#" class="art-tag">Transformation</a>
+          <a href="#" class="art-tag">IoT Industriel</a>
+          <a href="#" class="art-tag">Performance</a>
+        </div>
+
+      </article>
+
+      <!-- Sidebar -->
+      <aside class="art-sidebar">
+
+        <div class="sb-block reveal" data-d="1">
+          <div class="sb-label">À propos de l'auteur</div>
+          <div class="sb-author-ava">DM</div>
+          <div class="sb-author-name">David Machenaud</div>
+          <div class="sb-author-role">Associé & Directeur de Missions chez OPEO. Spécialiste de l'excellence opérationnelle en environnements industriels complexes depuis 15 ans.</div>
+          <a href="contact.html" class="sb-author-link">Contacter David →</a>
+        </div>
+
+        <div class="sb-block reveal" data-d="2">
+          <div class="sb-label">Sommaire</div>
+          <div class="sb-read-time">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            12 minutes de lecture
+          </div>
+          <ul class="sb-toc" style="margin-top:16px;">
+            <li><a href="#"><span class="toc-num">01</span> Le paradoxe de la transformation</a></li>
+            <li><a href="#"><span class="toc-num">02</span> Reprendre les fondamentaux</a></li>
+            <li><a href="#"><span class="toc-num">03</span> Phase 1 — Diagnostic de maturité</a></li>
+            <li><a href="#"><span class="toc-num">04</span> Phase 2 — Ancrage lean</a></li>
+            <li><a href="#"><span class="toc-num">05</span> Phase 3 — Amplification digitale</a></li>
+          </ul>
+        </div>
+
+        <div class="sb-block reveal" data-d="3">
+          <div class="sb-label">Partager cet article</div>
+          <div class="sb-share-btns">
+            <a href="https://www.linkedin.com/company/opeo/" target="_blank" class="sb-share-btn li">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+              Partager sur LinkedIn
+            </a>
+            <a href="#" class="sb-share-btn cp" onclick="navigator.clipboard.writeText(window.location.href);this.textContent='Lien copié !';setTimeout(()=>this.innerHTML='<svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'><rect x=\'9\' y=\'9\' width=\'13\' height=\'13\' rx=\'2\' ry=\'2\'/><path d=\'M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1\'/></svg> Copier le lien',2000);return false;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              Copier le lien
+            </a>
+          </div>
+        </div>
+
+        <div class="sb-block reveal" data-d="4" style="background:var(--navy);border-color:var(--navy);">
+          <div class="sb-label" style="color:rgba(255,255,255,.5);">Transformation sur mesure</div>
+          <p style="color:rgba(255,255,255,.75);font-size:13px;line-height:1.65;margin:0 0 16px;">Vos enjeux d'excellence opérationnelle méritent une approche sur mesure. Échangeons.</p>
+          <a href="contact.html" class="btn btn-cyan" style="display:block;text-align:center;font-size:13px;">Prendre contact →</a>
+        </div>
+
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ─── RELATED ARTICLES ─── -->
+<section class="art-related">
+  <div class="container">
+    <div class="related-header reveal">
+      <h2>À lire également</h2>
+      <a href="publications.html">Toutes les publications →</a>
+    </div>
+    <div class="related-grid">
+      <a href="#" class="rel-card reveal">
+        <img class="rel-card-img" src="photo expertise.jpg" alt="Supply Chain">
+        <div class="rel-card-body">
+          <div class="rel-card-cat">Supply Chain</div>
+          <div class="rel-card-title">Résilience des chaînes d'approvisionnement : leçons post-pandémie pour l'industrie européenne</div>
+          <div class="rel-card-date">28 avril 2026</div>
+        </div>
+      </a>
+      <a href="#" class="rel-card reveal" data-d="1">
+        <img class="rel-card-img" src="mission-bg.jpg" alt="Stratégie">
+        <div class="rel-card-body">
+          <div class="rel-card-cat">Stratégie Industrielle</div>
+          <div class="rel-card-title">Réindustrialisation en France : opportunités et conditions de réussite pour les ETI</div>
+          <div class="rel-card-date">14 avril 2026</div>
+        </div>
+      </a>
+      <a href="#" class="rel-card reveal" data-d="2">
+        <img class="rel-card-img" src="hero-bg.jpg" alt="Digital">
+        <div class="rel-card-body">
+          <div class="rel-card-cat">Digital &amp; Innovation</div>
+          <div class="rel-card-title">IA générative en atelier : cas d'usage concrets et pièges à éviter</div>
+          <div class="rel-card-date">3 mars 2026</div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer class="footer"><div class="container">
+  <div class="footer-grid">
+    <div class="footer-brand"><a href="index.html" class="nav-logo-link"><img src="logo-official.svg" class="nav-logo-img" alt="OPEO" /></a><p>Cabinet de Conseil européen spécialisé dans la transformation des opérations industrielles.</p><div class="footer-socials"><a href="https://www.linkedin.com/company/opeo/" target="_blank" class="soc-link">in</a><a href="https://www.youtube.com/channel/UCHxWDzGkSoEmFhDaU6nbsCg" target="_blank" class="soc-link">▶</a></div></div>
+    <div class="footer-col"><h4>Navigation</h4><ul class="footer-nav"><li><a href="index.html">Accueil</a></li><li><a href="expertises.html">Expertises</a></li><li><a href="secteurs.html">Secteurs</a></li><li><a href="transformation.html">Transformation</a></li></ul></div>
+    <div class="footer-col"><h4>OPEO</h4><ul class="footer-nav"><li><a href="a-propos.html">À propos</a></li><li><a href="carrieres.html">Carrières</a></li><li><a href="publications.html">Publications</a></li></ul></div>
+    <div class="footer-col"><h4>Légal</h4><ul class="footer-nav"><li><a href="mentions-legales.html">Mentions légales</a></li><li><a href="https://opeo.consulting" target="_blank">CGV</a></li></ul></div>
+  </div>
+  <div class="footer-bottom"><p>@OPEO 2026 · Conçu et développé en France</p><div class="footer-tagline">Vos Opérations sont <em>Stratégiques</em></div></div>
+</div></footer>
+
+<script>
+/* ── Nav ── */
+function openMob(){document.getElementById('mobMenu').classList.add('open');}
+function closeMob(){document.getElementById('mobMenu').classList.remove('open');}
+
+/* ── Reading progress ── */
+const prog = document.getElementById('read-progress');
+window.addEventListener('scroll', () => {
+  const doc = document.documentElement;
+  const scrolled = doc.scrollTop || document.body.scrollTop;
+  const total = doc.scrollHeight - doc.clientHeight;
+  prog.style.width = (scrolled / total * 100) + '%';
+}, { passive: true });
+
+/* ── Hero parallax ── */
+const heroImg = document.getElementById('heroParallax');
+window.addEventListener('scroll', () => {
+  const y = window.scrollY;
+  heroImg.style.transform = 'translateY(' + (y * 0.35) + 'px)';
+}, { passive: true });
+
+/* ── Scroll reveal ── */
+const revObs = new IntersectionObserver(e => e.forEach(x => {
+  if (x.isIntersecting) {
+    const d = x.target.dataset.d ? parseFloat(x.target.dataset.d) * 80 : 0;
+    setTimeout(() => {
+      x.target.classList.add('on');
+    }, d);
+    revObs.unobserve(x.target);
+  }
+}), { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => revObs.observe(el));
+</script>
+
+<!-- LANG MODAL -->
+<div class="lang-modal-overlay" id="langModal" onclick="closeLangModal()">
+  <div class="lang-modal" onclick="event.stopPropagation()">
+    <button class="lang-modal-close" onclick="closeLangModal()" aria-label="Fermer">&#x2715;</button>
+    <div class="lang-modal-ico">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+    </div>
+    <div class="lang-modal-kicker">EN &middot; English</div>
+    <h3>Version anglaise<br>en pr&eacute;paration</h3>
+    <p>Nous travaillons &agrave; la traduction de l&rsquo;ensemble de nos contenus en anglais. Revenez bient&ocirc;t.</p>
+    <a href="#" class="btn btn-navy" onclick="closeLangModal();return false;">Revenir au site &rarr;</a>
+  </div>
+</div>
+
+<script>
+/* Lang switch hover particles */
+(function(){
+  var lastT = 0;
+  document.querySelectorAll('.lang-btn:not(.active)').forEach(function(btn){
+    btn.addEventListener('pointermove', function(e){
+      var now = Date.now();
+      if(now - lastT < 100) return;
+      lastT = now;
+      var rect = btn.getBoundingClientRect();
+      var c = document.createElement('div');
+      c.className = 'lang-circle';
+      c.style.left = (e.clientX - rect.left) + 'px';
+      c.style.top  = (e.clientY - rect.top)  + 'px';
+      btn.appendChild(c);
+      requestAnimationFrame(function(){ c.classList.add('fade-in'); });
+      setTimeout(function(){ c.classList.replace('fade-in','fade-out'); }, 900);
+      setTimeout(function(){ c.remove(); }, 2100);
+    });
+  });
+})();
+</script>
+</body>
+</html>
